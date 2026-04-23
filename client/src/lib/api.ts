@@ -388,6 +388,12 @@ export const api = {
   // Offers
   // -------------------------------------------------------------------------
   offers: {
+    /** List offers for a specific project (GET /projects/:id/offers). */
+    listByProject: async (projectId: string): Promise<Offer[]> => {
+      const res = await axiosInstance.get<ContentList<Offer>>(`/projects/${projectId}/offers`);
+      return res.data.content ?? [];
+    },
+
     /** List offers (customer: on own projects; partner: own offers). */
     list: async (): Promise<Offer[]> => {
       const res = await axiosInstance.get<ContentList<Offer>>("/offers");
