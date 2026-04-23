@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { X, HardHat, Package, ChevronRight, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { api, normalizePhone } from "@/lib/api";
 
 /* ─── Types ─────────────────────────────────────────────────────────────── */
 
@@ -60,49 +61,72 @@ const TECH_TYPES = [
   "Модульные дома", "Кирпич", "Монолит", "Деревянный сруб",
 ];
 
+/** Maps region display names → backend region codes */
+const REGION_CODES: Record<string, string> = {
+  "Москва": "MSK",
+  "Московская область": "MSK",
+  "Санкт-Петербург": "SPB",
+  "Ленинградская область": "SPB",
+  "Краснодарский край": "KRD",
+  "Свердловская область": "EKB",
+  "Новосибирская область": "NSK",
+  "Татарстан": "KZN",
+  "Башкортостан": "UFA",
+  "Нижегородская область": "NNV",
+  "Самарская область": "SAM",
+  "Ростовская область": "ROV",
+  "Челябинская область": "CHE",
+  "Омская область": "OMS",
+  "Красноярский край": "KRS",
+  "Воронежская область": "VRN",
+  "Пермский край": "PRM",
+  "Волгоградская область": "VLG",
+  "Саратовская область": "SAR",
+  "Другой регион": "OTH",
+};
+
+/** Maps tech type display names → backend specialization codes */
+const TECH_CODES: Record<string, string> = {
+  "Каркасные дома": "timber_framing",
+  "СИП-панели": "sip",
+  "Клееный брус": "glulam",
+  "Газобетон": "aerated_concrete",
+  "Модульные дома": "modular",
+  "Кирпич": "brick",
+  "Монолит": "concrete",
+  "Деревянный сруб": "log_cabin",
+};
+
 /* ─── API call ───────────────────────────────────────────────────────────── */
 
+
+
 async function submitPartnerRegistration(data: FormData): Promise<void> {
-  // API endpoint — replace with real backend URL when available
-  const API_URL = import.meta.env.VITE_API_URL || "/api/partners/register";
+  // Split contactName into firstName + lastName
+  const nameParts = data.contactName.trim().split(/\s+/);
+  const firstName = nameParts[0] ?? "";
+  const lastName = nameParts.slice(1).join(" ") || firstName;
 
-  const payload = {
-    partnerType: data.partnerType,
-    company: {
-      name: data.companyName,
-      inn: data.inn,
-      region: data.region,
-      techTypes: data.techTypes ?? [],
-    },
-    contact: {
-      name: data.contactName,
-      phone: data.phone.replace(/[\s\-\(\)]/g, ""),
-      email: data.email,
-    },
-    comment: data.comment ?? "",
-    submittedAt: new Date().toISOString(),
-  };
+  // Map region display name to region code (best-effort)
+  const regionCode = REGION_CODES[data.region] ?? data.region.toUpperCase().slice(0, 3);
 
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+  // Map tech type display names to specialization codes
+  const specializations = (data.techTypes ?? []).map(
+    (t) => TECH_CODES[t] ?? t.toLowerCase().replace(/\s+/g, "_")
+  );
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err?.message ?? `Ошибка сервера: ${res.status}`);
-    }
-  } catch (err: unknown) {
-    // If backend is not yet available, simulate success for demo purposes
-    if (err instanceof TypeError && err.message.includes("fetch")) {
-      // Network error = backend not yet deployed, simulate success
-      await new Promise((r) => setTimeout(r, 1200));
-      return;
-    }
-    throw err;
-  }
+  await api.auth.registerPartner({
+    phone: normalizePhone(data.phone),
+    // Backend requires a password — use INN as temporary password
+    // (user will be prompted to change on first login)
+    password: data.inn,
+    firstName,
+    lastName,
+    companyName: data.companyName,
+    inn: data.inn,
+    regions: [regionCode],
+    specializations,
+  });
 }
 
 /* ─── Sub-components ─────────────────────────────────────────────────────── */
