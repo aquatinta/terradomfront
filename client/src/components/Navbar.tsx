@@ -2,12 +2,14 @@
    Sticky top navigation with logo, links, CTA button
    Auth-aware: shows user avatar + role badge when authenticated,
    "Войти в кабинет" button when not.
-   Mobile-responsive with hamburger menu. */
+   Mobile-responsive with hamburger menu.
+   Partner badge: Bell icon with unread count via useNotifications polling. */
 
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { Menu, X, LogOut, User, ChevronDown, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogOut, User, ChevronDown, LayoutDashboard, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNotifications } from "@/hooks/useNotifications";
 import { toast } from "sonner";
 
 const ROLE_LABELS: Record<string, string> = {
@@ -32,6 +34,8 @@ export default function Navbar() {
   const [, navigate] = useLocation();
 
   const { isAuthenticated, isInitializing, user, logout } = useAuth();
+  const isPartner = isAuthenticated && (user?.role === "partner" || user?.role === "supplier");
+  const { counts, markAllSeen } = useNotifications();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -59,7 +63,6 @@ export default function Navbar() {
 
   const scrollTo = (href: string) => {
     setMobileOpen(false);
-    // If it's a hash link, smooth scroll
     if (href.startsWith("#")) {
       const el = document.querySelector(href);
       if (el) {
@@ -67,7 +70,6 @@ export default function Navbar() {
         return;
       }
     }
-    // Otherwise use wouter navigate
     navigate(href);
   };
 
@@ -82,6 +84,8 @@ export default function Navbar() {
   const handleDashboard = () => {
     setUserMenuOpen(false);
     setMobileOpen(false);
+    // Сбрасываем badge при переходе в кабинет партнёра
+    if (isPartner) markAllSeen();
     const role = user?.role ?? "customer";
     const path = ROLE_DASHBOARD[role] ?? "/dashboard";
     navigate(path);
@@ -96,9 +100,31 @@ export default function Navbar() {
   const roleLabel = user ? (ROLE_LABELS[user.role] ?? user.role) : "";
 
   // ---------------------------------------------------------------------------
+  // Notification badge (только для партнёра)
+  // ---------------------------------------------------------------------------
+  const NotificationBadge = () => {
+    if (!isPartner || counts.total === 0) return null;
+    return (
+      <button
+        onClick={() => {
+          markAllSeen();
+          const role = user?.role ?? "partner";
+          navigate(ROLE_DASHBOARD[role] ?? "/partner");
+        }}
+        title={`${counts.newTenders > 0 ? `${counts.newTenders} новых тендеров` : ""}${counts.acceptedOffers > 0 ? `, ${counts.acceptedOffers} принятых офферов` : ""}`}
+        className="relative flex items-center justify-center w-9 h-9 rounded-lg border border-[oklch(0.3_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors"
+      >
+        <Bell size={16} className="text-[oklch(0.769_0.188_70.08)]" />
+        <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)] text-[10px] font-bold flex items-center justify-center leading-none">
+          {counts.total > 99 ? "99+" : counts.total}
+        </span>
+      </button>
+    );
+  };
+
+  // ---------------------------------------------------------------------------
   // Auth CTA block (desktop)
   // ---------------------------------------------------------------------------
-
   const AuthBlock = () => {
     if (isInitializing) {
       return (
@@ -108,71 +134,82 @@ export default function Navbar() {
 
     if (isAuthenticated && user) {
       return (
-        <div className="relative" ref={userMenuRef}>
-          <button
-            onClick={() => setUserMenuOpen((v) => !v)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[oklch(0.3_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors group"
-          >
-            {/* Avatar */}
-            <div className="w-7 h-7 rounded-full bg-[oklch(0.769_0.188_70.08)] flex items-center justify-center text-xs font-bold text-[oklch(0.1_0.01_70)]">
-              {initials}
-            </div>
-            <div className="text-left hidden lg:block">
-              <p className="text-xs font-medium text-white leading-tight">
-                {user.firstName ?? user.phone}
-              </p>
-              <p className="text-[10px] text-[oklch(0.769_0.188_70.08)] leading-tight">
-                {roleLabel}
-              </p>
-            </div>
-            <ChevronDown
-              size={14}
-              className={`text-[oklch(0.6_0.01_240)] transition-transform duration-200 ${
-                userMenuOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
+        <div className="flex items-center gap-2">
+          {/* Notification bell (partner only) */}
+          <NotificationBadge />
 
-          {/* Dropdown menu */}
-          {userMenuOpen && (
-            <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-[oklch(0.28_0.01_240)] bg-[oklch(0.14_0.01_240/0.98)] backdrop-blur-xl shadow-2xl overflow-hidden z-50">
-              {/* User info header */}
-              <div className="px-4 py-3 border-b border-[oklch(0.22_0.01_240)]">
-                <p className="text-sm font-semibold text-white truncate">
-                  {user.companyName ?? (`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.phone)}
+          <div className="relative" ref={userMenuRef}>
+            <button
+              onClick={() => setUserMenuOpen((v) => !v)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[oklch(0.3_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors group"
+            >
+              {/* Avatar */}
+              <div className="w-7 h-7 rounded-full bg-[oklch(0.769_0.188_70.08)] flex items-center justify-center text-xs font-bold text-[oklch(0.1_0.01_70)]">
+                {initials}
+              </div>
+              <div className="text-left hidden lg:block">
+                <p className="text-xs font-medium text-white leading-tight">
+                  {user.firstName ?? user.phone}
                 </p>
-                <p className="text-xs text-[oklch(0.769_0.188_70.08)] mt-0.5">{roleLabel}</p>
+                <p className="text-[10px] text-[oklch(0.769_0.188_70.08)] leading-tight">
+                  {roleLabel}
+                </p>
               </div>
+              <ChevronDown
+                size={14}
+                className={`text-[oklch(0.6_0.01_240)] transition-transform duration-200 ${
+                  userMenuOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
 
-              {/* Menu items */}
-              <div className="py-1">
-                <button
-                  onClick={handleDashboard}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[oklch(0.85_0.005_240)] hover:bg-[oklch(0.22_0.01_240)] hover:text-white transition-colors"
-                >
-                  <LayoutDashboard size={15} className="text-[oklch(0.769_0.188_70.08)]" />
-                  Личный кабинет
-                </button>
-                <button
-                  onClick={() => { setUserMenuOpen(false); toast.info("Профиль — в разработке (Этап 2)"); }}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[oklch(0.85_0.005_240)] hover:bg-[oklch(0.22_0.01_240)] hover:text-white transition-colors"
-                >
-                  <User size={15} className="text-[oklch(0.6_0.01_240)]" />
-                  Профиль
-                </button>
-              </div>
+            {/* Dropdown menu */}
+            {userMenuOpen && (
+              <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-[oklch(0.28_0.01_240)] bg-[oklch(0.14_0.01_240/0.98)] backdrop-blur-xl shadow-2xl overflow-hidden z-50">
+                {/* User info header */}
+                <div className="px-4 py-3 border-b border-[oklch(0.22_0.01_240)]">
+                  <p className="text-sm font-semibold text-white truncate">
+                    {user.companyName ?? (`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.phone)}
+                  </p>
+                  <p className="text-xs text-[oklch(0.769_0.188_70.08)] mt-0.5">{roleLabel}</p>
+                </div>
 
-              <div className="border-t border-[oklch(0.22_0.01_240)] py-1">
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-[oklch(0.22_0.01_240)] hover:text-red-300 transition-colors"
-                >
-                  <LogOut size={15} />
-                  Выйти
-                </button>
+                {/* Menu items */}
+                <div className="py-1">
+                  <button
+                    onClick={handleDashboard}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[oklch(0.85_0.005_240)] hover:bg-[oklch(0.22_0.01_240)] hover:text-white transition-colors"
+                  >
+                    <LayoutDashboard size={15} className="text-[oklch(0.769_0.188_70.08)]" />
+                    Личный кабинет
+                    {/* Badge в дропдауне */}
+                    {isPartner && counts.total > 0 && (
+                      <span className="ml-auto min-w-[18px] h-[18px] px-1 rounded-full bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)] text-[10px] font-bold flex items-center justify-center">
+                        {counts.total}
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => { setUserMenuOpen(false); toast.info("Профиль — в разработке (Этап 2)"); }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[oklch(0.85_0.005_240)] hover:bg-[oklch(0.22_0.01_240)] hover:text-white transition-colors"
+                  >
+                    <User size={15} className="text-[oklch(0.6_0.01_240)]" />
+                    Профиль
+                  </button>
+                </div>
+
+                <div className="border-t border-[oklch(0.22_0.01_240)] py-1">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-[oklch(0.22_0.01_240)] hover:text-red-300 transition-colors"
+                  >
+                    <LogOut size={15} />
+                    Выйти
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       );
     }
@@ -271,12 +308,18 @@ export default function Navbar() {
                     <div className="w-9 h-9 rounded-full bg-[oklch(0.769_0.188_70.08)] flex items-center justify-center text-sm font-bold text-[oklch(0.1_0.01_70)]">
                       {initials}
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-white">
                         {user.firstName ?? user.phone}
                       </p>
                       <p className="text-xs text-[oklch(0.769_0.188_70.08)]">{roleLabel}</p>
                     </div>
+                    {/* Mobile notification badge */}
+                    {isPartner && counts.total > 0 && (
+                      <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)] text-[10px] font-bold flex items-center justify-center">
+                        {counts.total}
+                      </span>
+                    )}
                   </div>
                   <button
                     onClick={handleDashboard}
