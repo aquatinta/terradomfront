@@ -113,7 +113,9 @@ function Sidebar({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[oklch(0.09_0.015_255)] border-r border-[oklch(0.20_0.025_255)]">
+    <div className="flex flex-col h-full border-r border-[oklch(0.20_0.025_255)]" style={{
+      background: "linear-gradient(180deg, oklch(0.13 0.04 255) 0%, oklch(0.10 0.025 255) 50%, oklch(0.09 0.015 255) 100%)",
+    }}>
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 h-16 border-b border-[oklch(0.20_0.025_255)] flex-shrink-0">
         <a href="/" className="flex items-center gap-2.5">
@@ -224,7 +226,15 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
   const navItems = NAV_BY_ROLE[role] ?? CUSTOMER_NAV;
 
   return (
-    <div className="flex h-screen bg-[oklch(0.09_0.015_255)] overflow-hidden">
+    <div className="flex h-screen overflow-hidden" style={{
+      background: "oklch(0.09 0.015 255)",
+      backgroundImage: `radial-gradient(
+        ellipse 55% 80% at 0% 40%,
+        oklch(0.28 0.12 255 / 0.45) 0%,
+        oklch(0.18 0.07 255 / 0.20) 40%,
+        transparent 65%
+      )`,
+    }}>
       {/* Desktop sidebar */}
       <div className="hidden md:flex flex-col w-64 flex-shrink-0">
         <Sidebar navItems={navItems} />
@@ -246,7 +256,7 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
-        <header className="flex items-center gap-4 px-4 md:px-6 h-16 border-b border-[oklch(0.20_0.025_255)] bg-[oklch(0.09_0.015_255/0.8)] backdrop-blur-sm flex-shrink-0">
+        <header className="flex items-center gap-4 px-4 md:px-6 h-16 border-b border-[oklch(0.20_0.025_255)] backdrop-blur-sm flex-shrink-0" style={{ background: "oklch(0.10 0.025 255 / 0.85)" }}>
           {/* Mobile menu button */}
           <button
             className="md:hidden text-[oklch(0.65_0.012_240)] hover:text-white"
@@ -260,7 +270,7 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
             {title && (
               <h1
                 className="text-base font-bold text-white truncate"
-                style={{ fontFamily: "Manrope, sans-serif" }}
+                style={{ fontFamily: "Montserrat, sans-serif" }}
               >
                 {title}
               </h1>

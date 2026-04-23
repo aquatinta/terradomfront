@@ -249,7 +249,9 @@ export default function ProfilePage() {
   /* ── Form ── */
   return (
     <DashboardLayout title="Профиль" subtitle="Личные данные и настройки аккаунта">
-      <div className="max-w-2xl">
+      <div className="max-w-2xl p-4 md:p-6" style={{
+        background: "radial-gradient(ellipse 60% 50% at 0% 20%, oklch(0.22 0.08 255 / 0.25) 0%, transparent 60%)",
+      }}>
         {/* Header card */}
         <div className="mb-6 p-5 rounded-2xl border border-[oklch(0.28_0.03_255)] bg-[oklch(0.13_0.018_255)] flex items-center gap-4">
           {/* Avatar */}

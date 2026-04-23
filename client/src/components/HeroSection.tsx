@@ -56,11 +56,11 @@ export default function HeroSection() {
         style={{
           background: `
             radial-gradient(
-              ellipse 65% 90% at 0% 50%,
-              oklch(0.32 0.14 255 / 0.60) 0%,
-              oklch(0.22 0.10 255 / 0.35) 30%,
-              oklch(0.14 0.06 255 / 0.12) 55%,
-              transparent 75%
+              ellipse 70% 100% at -5% 50%,
+              oklch(0.38 0.18 255 / 0.80) 0%,
+              oklch(0.28 0.13 255 / 0.55) 25%,
+              oklch(0.18 0.08 255 / 0.25) 50%,
+              transparent 72%
             )
           `,
         }}
@@ -94,13 +94,13 @@ export default function HeroSection() {
             {/* Headline — Montserrat extrabold как на образце */}
             <div>
               <p
-                className="text-sm font-semibold text-[oklch(0.72_0.01_240)] uppercase tracking-widest mb-3"
+                className="text-xs font-semibold text-[oklch(0.72_0.01_240)] uppercase tracking-widest mb-3"
                 style={{ fontFamily: "Montserrat, sans-serif" }}
               >
                 Маркетплейс строительства
               </p>
               <h1
-                className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.05] tracking-tight"
+                className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-black leading-[1.08] tracking-tight"
                 style={{ fontFamily: "Montserrat, sans-serif" }}
               >
                 <span className="text-white">Постройте</span>

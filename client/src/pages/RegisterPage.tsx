@@ -323,7 +323,15 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[oklch(0.09_0.015_255)] flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen flex items-center justify-center px-4 py-10" style={{
+      background: "oklch(0.09 0.015 255)",
+      backgroundImage: `radial-gradient(
+        ellipse 70% 80% at 0% 50%,
+        oklch(0.30 0.13 255 / 0.55) 0%,
+        oklch(0.20 0.08 255 / 0.25) 40%,
+        transparent 65%
+      )`,
+    }}>
       {/* Blueprint grid background */}
       <div
         className="fixed inset-0 opacity-[0.03] pointer-events-none"

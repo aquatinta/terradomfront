@@ -90,7 +90,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[oklch(0.09_0.015_255)] flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{
+      background: "oklch(0.09 0.015 255)",
+      backgroundImage: `radial-gradient(
+        ellipse 70% 80% at 0% 50%,
+        oklch(0.30 0.13 255 / 0.55) 0%,
+        oklch(0.20 0.08 255 / 0.25) 40%,
+        transparent 65%
+      )`,
+    }}>
       {/* Blueprint grid background */}
       <div
         className="fixed inset-0 opacity-[0.03] pointer-events-none"
@@ -129,7 +137,7 @@ export default function LoginPage() {
         <div className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-8 shadow-2xl">
           <h1
             className="text-xl font-bold text-white mb-6"
-            style={{ fontFamily: "Manrope, sans-serif" }}
+            style={{ fontFamily: "Montserrat, sans-serif" }}
           >
             Вход
           </h1>
