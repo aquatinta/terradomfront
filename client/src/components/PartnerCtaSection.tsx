@@ -4,10 +4,11 @@
 
 import { useEffect, useRef } from "react";
 import { HardHat, Package, ArrowRight } from "lucide-react";
-import { toast } from "sonner";
+import { usePartnerModal } from "@/contexts/PartnerModalContext";
 
 export default function PartnerCtaSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { openModal } = usePartnerModal();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -87,7 +88,7 @@ export default function PartnerCtaSection() {
               ))}
             </ul>
             <button
-              onClick={() => toast.info("Регистрация подрядчиков откроется в ближайшее время")}
+              onClick={() => openModal("contractor")}
               className="btn-amber w-full flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm font-bold"
             >
               Стать подрядчиком
@@ -129,7 +130,7 @@ export default function PartnerCtaSection() {
               ))}
             </ul>
             <button
-              onClick={() => toast.info("Регистрация поставщиков откроется в ближайшее время")}
+              onClick={() => openModal("supplier")}
               className="btn-amber-outline w-full flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm font-bold"
             >
               Разместить каталог

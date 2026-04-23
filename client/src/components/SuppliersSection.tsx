@@ -4,7 +4,7 @@
 
 import { useEffect, useRef } from "react";
 import { Package, BarChart3, Globe, Zap, ArrowRight } from "lucide-react";
-import { toast } from "sonner";
+import { usePartnerModal } from "@/contexts/PartnerModalContext";
 
 const benefits = [
   {
@@ -40,6 +40,7 @@ const techTypes = [
 
 export default function SuppliersSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { openModal } = usePartnerModal();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -140,14 +141,14 @@ export default function SuppliersSection() {
             {/* CTA */}
             <div className="reveal flex flex-col sm:flex-row gap-3">
               <button
-                onClick={() => toast.info("Регистрация поставщиков откроется в ближайшее время")}
+                onClick={() => openModal("supplier")}
                 className="btn-amber flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-base font-bold"
               >
                 Разместить каталог
                 <ArrowRight size={18} />
               </button>
               <button
-                onClick={() => toast.info("Условия для поставщиков — в разработке")}
+                onClick={() => openModal("supplier")}
                 className="btn-amber-outline flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-base"
               >
                 Узнать условия

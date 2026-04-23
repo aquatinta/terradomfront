@@ -5,6 +5,7 @@
 import { useEffect, useRef } from "react";
 import { CheckCircle, TrendingUp, Shield, FileText, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import { usePartnerModal } from "@/contexts/PartnerModalContext";
 
 const CONTRACTOR_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663083092813/A58kibhm9oWDaNRQR3mFUx/terradom-contractor-work-H7akg4Qq9JcPoGfCPUS8ut.webp";
 
@@ -33,6 +34,7 @@ const benefits = [
 
 export default function ContractorsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { openModal } = usePartnerModal();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -155,14 +157,14 @@ export default function ContractorsSection() {
             {/* CTA */}
             <div className="reveal flex flex-col sm:flex-row gap-3">
               <button
-                onClick={() => toast.info("Регистрация подрядчиков откроется в ближайшее время")}
+                onClick={() => openModal("contractor")}
                 className="btn-amber flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-base font-bold"
               >
                 Стать подрядчиком
                 <ArrowRight size={18} />
               </button>
               <button
-                onClick={() => toast.info("Подробные условия партнёрства — в разработке")}
+                onClick={() => openModal("contractor")}
                 className="btn-amber-outline flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-base"
               >
                 Условия партнёрства

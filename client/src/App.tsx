@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { PartnerModalProvider } from "./contexts/PartnerModalContext";
 import Home from "./pages/Home";
 
 function Router() {
@@ -22,7 +23,9 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <PartnerModalProvider>
+            <Router />
+          </PartnerModalProvider>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
