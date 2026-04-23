@@ -16,7 +16,7 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen" style={{ background: "oklch(0.12 0.008 240)" }}>
+    <div className="min-h-screen" style={{ background: "oklch(0.09 0.015 255)" }}>
       <Navbar />
       <HeroSection />
       <StatsSection />

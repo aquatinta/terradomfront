@@ -135,7 +135,7 @@ async function submitPartnerRegistration(data: FormData): Promise<void> {
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
   return (
-    <p className="flex items-center gap-1 mt-1 text-xs text-red-400" style={{ fontFamily: "Inter, sans-serif" }}>
+    <p className="flex items-center gap-1 mt-1 text-xs text-red-400" style={{ fontFamily: "Manrope, sans-serif" }}>
       <AlertCircle size={11} />
       {message}
     </p>
@@ -155,7 +155,7 @@ function FormInput({
     <div className="flex flex-col gap-1">
       <label
         className="text-xs font-semibold text-[oklch(0.65_0.01_240)] uppercase tracking-wide"
-        style={{ fontFamily: "Inter, sans-serif" }}
+        style={{ fontFamily: "Manrope, sans-serif" }}
       >
         {label}
       </label>
@@ -169,9 +169,9 @@ const inputClass =
   "w-full px-3.5 py-2.5 rounded-lg text-sm text-white outline-none transition-all duration-150 focus:ring-2 placeholder:text-[oklch(0.38_0.01_240)]";
 
 const inputStyle = {
-  background: "oklch(0.18 0.01 240)",
-  border: "1.5px solid oklch(0.28 0.01 240)",
-  fontFamily: "Inter, sans-serif",
+  background: "oklch(0.14 0.02 255)",
+  border: "1.5px solid oklch(0.24 0.03 255)",
+  fontFamily: "Manrope, sans-serif",
 };
 
 const inputFocusStyle = {
@@ -275,7 +275,7 @@ export default function PartnerRegistrationModal({
       <div
         className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl"
         style={{
-          background: "oklch(0.14 0.01 240)",
+          background: "oklch(0.11 0.018 255)",
           border: "1px solid oklch(0.769 0.188 70.08 / 0.2)",
           boxShadow: "0 40px 80px oklch(0 0 0 / 0.7), 0 0 0 1px oklch(0.769 0.188 70.08 / 0.1)",
         }}
@@ -313,7 +313,7 @@ export default function PartnerRegistrationModal({
               </h3>
               <p
                 className="text-sm text-[oklch(0.60_0.01_240)] leading-relaxed max-w-sm"
-                style={{ fontFamily: "Inter, sans-serif" }}
+                style={{ fontFamily: "Manrope, sans-serif" }}
               >
                 Мы получили вашу заявку на регистрацию. Менеджер свяжется с вами
                 в течение 1 рабочего дня для верификации и подключения к платформе.
@@ -337,10 +337,10 @@ export default function PartnerRegistrationModal({
         {step === "form" && (
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             {/* Header */}
-            <div className="px-6 pt-6 pb-5" style={{ borderBottom: "1px solid oklch(0.22 0.01 240)" }}>
+            <div className="px-6 pt-6 pb-5" style={{ borderBottom: "1px solid oklch(0.17 0.02 255)" }}>
               <p
                 className="text-xs text-[oklch(0.769_0.188_70.08)] font-semibold uppercase tracking-widest mb-1"
-                style={{ fontFamily: "Inter, sans-serif" }}
+                style={{ fontFamily: "Manrope, sans-serif" }}
               >
                 Партнёрская программа
               </p>
@@ -358,7 +358,7 @@ export default function PartnerRegistrationModal({
               <div>
                 <p
                   className="text-xs font-semibold text-[oklch(0.65_0.01_240)] uppercase tracking-wide mb-2"
-                  style={{ fontFamily: "Inter, sans-serif" }}
+                  style={{ fontFamily: "Manrope, sans-serif" }}
                 >
                   Тип партнёра
                 </p>
@@ -375,10 +375,10 @@ export default function PartnerRegistrationModal({
                         onClick={() => setValue("partnerType", type)}
                         className="flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-150"
                         style={{
-                          background: active ? "oklch(0.769 0.188 70.08 / 0.12)" : "oklch(0.18 0.01 240)",
+                          background: active ? "oklch(0.769 0.188 70.08 / 0.12)" : "oklch(0.14 0.02 255)",
                           border: active
                             ? "1.5px solid oklch(0.769 0.188 70.08 / 0.5)"
-                            : "1.5px solid oklch(0.28 0.01 240)",
+                            : "1.5px solid oklch(0.24 0.03 255)",
                         }}
                       >
                         <div
@@ -386,19 +386,19 @@ export default function PartnerRegistrationModal({
                           style={{
                             background: active
                               ? "oklch(0.769 0.188 70.08 / 0.2)"
-                              : "oklch(0.22 0.01 240)",
+                              : "oklch(0.17 0.02 255)",
                           }}
                         >
                           <Icon
                             size={16}
-                            style={{ color: active ? "oklch(0.769 0.188 70.08)" : "oklch(0.50 0.01 240)" }}
+                            style={{ color: active ? "oklch(0.769 0.188 70.08)" : "oklch(0.50 0.012 240)" }}
                           />
                         </div>
                         <div>
                           <div
                             className="text-sm font-bold"
                             style={{
-                              color: active ? "white" : "oklch(0.65 0.01 240)",
+                              color: active ? "white" : "oklch(0.65 0.012 240)",
                               fontFamily: "Manrope, sans-serif",
                             }}
                           >
@@ -407,8 +407,8 @@ export default function PartnerRegistrationModal({
                           <div
                             className="text-[10px]"
                             style={{
-                              color: active ? "oklch(0.65 0.01 240)" : "oklch(0.45 0.01 240)",
-                              fontFamily: "Inter, sans-serif",
+                              color: active ? "oklch(0.65 0.012 240)" : "oklch(0.45 0.01 240)",
+                              fontFamily: "Manrope, sans-serif",
                             }}
                           >
                             {desc}
@@ -482,11 +482,11 @@ export default function PartnerRegistrationModal({
                   className={inputClass}
                   style={{ ...inputStyle, ...inputFocusStyle }}
                 >
-                  <option value="" style={{ background: "oklch(0.14 0.01 240)" }}>
+                  <option value="" style={{ background: "oklch(0.11 0.018 255)" }}>
                     Выберите регион
                   </option>
                   {REGIONS.map((r) => (
-                    <option key={r} value={r} style={{ background: "oklch(0.14 0.01 240)" }}>
+                    <option key={r} value={r} style={{ background: "oklch(0.11 0.018 255)" }}>
                       {r}
                     </option>
                   ))}
@@ -498,7 +498,7 @@ export default function PartnerRegistrationModal({
                 <div>
                   <p
                     className="text-xs font-semibold text-[oklch(0.65_0.01_240)] uppercase tracking-wide mb-2"
-                    style={{ fontFamily: "Inter, sans-serif" }}
+                    style={{ fontFamily: "Manrope, sans-serif" }}
                   >
                     Типы материалов / технологий
                   </p>
@@ -514,12 +514,12 @@ export default function PartnerRegistrationModal({
                           style={{
                             background: active
                               ? "oklch(0.769 0.188 70.08 / 0.15)"
-                              : "oklch(0.18 0.01 240)",
+                              : "oklch(0.14 0.02 255)",
                             border: active
                               ? "1px solid oklch(0.769 0.188 70.08 / 0.5)"
-                              : "1px solid oklch(0.28 0.01 240)",
-                            color: active ? "oklch(0.769 0.188 70.08)" : "oklch(0.55 0.01 240)",
-                            fontFamily: "Inter, sans-serif",
+                              : "1px solid oklch(0.24 0.03 255)",
+                            color: active ? "oklch(0.769 0.188 70.08)" : "oklch(0.55 0.012 240)",
+                            fontFamily: "Manrope, sans-serif",
                           }}
                         >
                           {tech}
@@ -552,7 +552,7 @@ export default function PartnerRegistrationModal({
                 <label
                   htmlFor="agreeTerms"
                   className="text-xs leading-relaxed cursor-pointer"
-                  style={{ color: "oklch(0.55 0.01 240)", fontFamily: "Inter, sans-serif" }}
+                  style={{ color: "oklch(0.55 0.012 240)", fontFamily: "Manrope, sans-serif" }}
                 >
                   Я принимаю{" "}
                   <button
@@ -580,11 +580,11 @@ export default function PartnerRegistrationModal({
             {/* Footer */}
             <div
               className="px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3"
-              style={{ borderTop: "1px solid oklch(0.22 0.01 240)" }}
+              style={{ borderTop: "1px solid oklch(0.17 0.02 255)" }}
             >
               <p
                 className="text-xs text-[oklch(0.40_0.01_240)] text-center sm:text-left"
-                style={{ fontFamily: "Inter, sans-serif" }}
+                style={{ fontFamily: "Manrope, sans-serif" }}
               >
                 Менеджер свяжется в течение 1 рабочего дня
               </p>

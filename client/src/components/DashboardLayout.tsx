@@ -113,9 +113,9 @@ function Sidebar({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[oklch(0.12_0.008_240)] border-r border-[oklch(0.22_0.01_240)]">
+    <div className="flex flex-col h-full bg-[oklch(0.09_0.015_255)] border-r border-[oklch(0.20_0.025_255)]">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 h-16 border-b border-[oklch(0.22_0.01_240)] flex-shrink-0">
+      <div className="flex items-center gap-3 px-5 h-16 border-b border-[oklch(0.20_0.025_255)] flex-shrink-0">
         <a href="/" className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-sm bg-[oklch(0.769_0.188_70.08)] flex items-center justify-center">
             <svg width="15" height="15" viewBox="0 0 18 18" fill="none">
@@ -128,15 +128,15 @@ function Sidebar({
           </span>
         </a>
         {onClose && (
-          <button onClick={onClose} className="ml-auto text-[oklch(0.55_0.01_240)] hover:text-white">
+          <button onClick={onClose} className="ml-auto text-[oklch(0.55_0.012_240)] hover:text-white">
             <X size={18} />
           </button>
         )}
       </div>
 
       {/* User card */}
-      <div className="px-4 py-4 border-b border-[oklch(0.22_0.01_240)] flex-shrink-0">
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-[oklch(0.16_0.01_240)]">
+      <div className="px-4 py-4 border-b border-[oklch(0.20_0.025_255)] flex-shrink-0">
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-[oklch(0.13_0.018_255)]">
           <div className="w-9 h-9 rounded-full bg-[oklch(0.769_0.188_70.08)] flex items-center justify-center text-sm font-bold text-[oklch(0.1_0.01_70)] flex-shrink-0">
             {initials}
           </div>
@@ -160,10 +160,10 @@ function Sidebar({
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 group ${
                 isActive
                   ? "bg-[oklch(0.769_0.188_70.08/0.15)] text-[oklch(0.769_0.188_70.08)] border border-[oklch(0.769_0.188_70.08/0.25)]"
-                  : "text-[oklch(0.65_0.01_240)] hover:bg-[oklch(0.18_0.01_240)] hover:text-white"
+                  : "text-[oklch(0.65_0.012_240)] hover:bg-[oklch(0.14_0.02_255)] hover:text-white"
               }`}
             >
-              <span className={isActive ? "text-[oklch(0.769_0.188_70.08)]" : "text-[oklch(0.5_0.01_240)] group-hover:text-[oklch(0.769_0.188_70.08/0.7)]"}>
+              <span className={isActive ? "text-[oklch(0.769_0.188_70.08)]" : "text-[oklch(0.5_0.012_240)] group-hover:text-[oklch(0.769_0.188_70.08/0.7)]"}>
                 {item.icon}
               </span>
               <span className="flex-1 text-left font-medium">{item.label}</span>
@@ -173,7 +173,7 @@ function Sidebar({
                 </span>
               )}
               {item.comingSoon && (
-                <span className="text-[9px] px-1.5 py-0.5 rounded border border-[oklch(0.3_0.01_240)] text-[oklch(0.45_0.01_240)]">
+                <span className="text-[9px] px-1.5 py-0.5 rounded border border-[oklch(0.26_0.03_255)] text-[oklch(0.45_0.012_240)]">
                   скоро
                 </span>
               )}
@@ -184,10 +184,10 @@ function Sidebar({
       </nav>
 
       {/* Footer actions */}
-      <div className="px-3 py-4 border-t border-[oklch(0.22_0.01_240)] flex-shrink-0 space-y-1">
+      <div className="px-3 py-4 border-t border-[oklch(0.20_0.025_255)] flex-shrink-0 space-y-1">
         <a
           href="/"
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[oklch(0.65_0.01_240)] hover:bg-[oklch(0.18_0.01_240)] hover:text-white transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[oklch(0.65_0.012_240)] hover:bg-[oklch(0.14_0.02_255)] hover:text-white transition-colors"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -224,7 +224,7 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
   const navItems = NAV_BY_ROLE[role] ?? CUSTOMER_NAV;
 
   return (
-    <div className="flex h-screen bg-[oklch(0.10_0.008_240)] overflow-hidden">
+    <div className="flex h-screen bg-[oklch(0.09_0.015_255)] overflow-hidden">
       {/* Desktop sidebar */}
       <div className="hidden md:flex flex-col w-64 flex-shrink-0">
         <Sidebar navItems={navItems} />
@@ -246,10 +246,10 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
-        <header className="flex items-center gap-4 px-4 md:px-6 h-16 border-b border-[oklch(0.22_0.01_240)] bg-[oklch(0.12_0.008_240/0.8)] backdrop-blur-sm flex-shrink-0">
+        <header className="flex items-center gap-4 px-4 md:px-6 h-16 border-b border-[oklch(0.20_0.025_255)] bg-[oklch(0.09_0.015_255/0.8)] backdrop-blur-sm flex-shrink-0">
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-[oklch(0.65_0.01_240)] hover:text-white"
+            className="md:hidden text-[oklch(0.65_0.012_240)] hover:text-white"
             onClick={() => setMobileOpen(true)}
           >
             <Menu size={22} />
@@ -266,14 +266,14 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
               </h1>
             )}
             {subtitle && (
-              <p className="text-xs text-[oklch(0.55_0.01_240)] truncate">{subtitle}</p>
+              <p className="text-xs text-[oklch(0.55_0.012_240)] truncate">{subtitle}</p>
             )}
           </div>
 
           {/* Notifications (placeholder) */}
           <button
             onClick={() => toast.info("Уведомления — в разработке")}
-            className="relative p-2 rounded-lg text-[oklch(0.55_0.01_240)] hover:text-white hover:bg-[oklch(0.18_0.01_240)] transition-colors"
+            className="relative p-2 rounded-lg text-[oklch(0.55_0.012_240)] hover:text-white hover:bg-[oklch(0.14_0.02_255)] transition-colors"
           >
             <Bell size={18} />
           </button>

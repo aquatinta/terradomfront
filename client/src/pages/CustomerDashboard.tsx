@@ -50,7 +50,7 @@ const DEAL_STATUS_LABELS: Record<string, string> = {
 };
 
 const DEAL_STATUS_COLORS: Record<string, string> = {
-  draft: "text-[oklch(0.55_0.01_240)] bg-[oklch(0.18_0.01_240)]",
+  draft: "text-[oklch(0.55_0.012_240)] bg-[oklch(0.14_0.02_255)]",
   pending_payment: "text-[oklch(0.769_0.188_70.08)] bg-[oklch(0.18_0.05_70)]",
   in_progress: "text-[oklch(0.75_0.18_160)] bg-[oklch(0.18_0.05_160)]",
   completed: "text-[oklch(0.75_0.18_160)] bg-[oklch(0.18_0.08_160)]",
@@ -114,11 +114,11 @@ function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-[oklch(0.16_0.01_240)] flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-2xl bg-[oklch(0.13_0.018_255)] flex items-center justify-center mb-4">
         <Icon size={28} className="text-[oklch(0.4_0.01_240)]" />
       </div>
       <h3 className="text-base font-semibold text-white mb-2">{title}</h3>
-      <p className="text-sm text-[oklch(0.5_0.01_240)] max-w-xs leading-relaxed mb-6">
+      <p className="text-sm text-[oklch(0.5_0.012_240)] max-w-xs leading-relaxed mb-6">
         {description}
       </p>
       {action}
@@ -140,7 +140,7 @@ function ProjectCard({
   const status = (project.status as string) ?? "draft";
   const colorCls =
     PROJECT_STATUS_COLORS[status as keyof typeof PROJECT_STATUS_COLORS] ??
-    "text-[oklch(0.55_0.01_240)] bg-[oklch(0.18_0.01_240)]";
+    "text-[oklch(0.55_0.012_240)] bg-[oklch(0.14_0.02_255)]";
   const label =
     PROJECT_STATUS_LABELS[status as keyof typeof PROJECT_STATUS_LABELS] ??
     status;
@@ -148,16 +148,16 @@ function ProjectCard({
   return (
     <div
       onClick={() => onSelect(project)}
-      className="group relative rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] p-5 cursor-pointer hover:border-[oklch(0.769_0.188_70.08/0.4)] hover:bg-[oklch(0.15_0.01_240)] transition-all duration-200"
+      className="group relative rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-5 cursor-pointer hover:border-[oklch(0.769_0.188_70.08/0.4)] hover:bg-[oklch(0.15_0.01_240)] transition-all duration-200"
     >
       {project.syncVersion > 0 && (
         <div className="absolute top-3 right-3 flex items-center gap-1">
           <Wifi size={11} className="text-[oklch(0.75_0.18_160)]" />
-          <span className="text-[10px] text-[oklch(0.55_0.01_240)]">синхр.</span>
+          <span className="text-[10px] text-[oklch(0.55_0.012_240)]">синхр.</span>
         </div>
       )}
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 rounded-xl bg-[oklch(0.18_0.01_240)] flex items-center justify-center flex-shrink-0">
+        <div className="w-12 h-12 rounded-xl bg-[oklch(0.14_0.02_255)] flex items-center justify-center flex-shrink-0">
           <Layers size={22} className="text-[oklch(0.769_0.188_70.08)]" />
         </div>
         <div className="flex-1 min-w-0">
@@ -176,19 +176,19 @@ function ProjectCard({
               if (!tech) return null;
               const techStr = String(tech);
               return (
-                <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.01_240)]">
+                <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.012_240)]">
                   <Building2 size={11} />
                   {TECH_LABELS[techStr] ?? techStr}
                 </div>
               );
             })()}
             {(project.geometry as Record<string, unknown> | null)?.areaTotalM2 != null && (
-              <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.01_240)]">
+              <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.012_240)]">
                 <Layers size={11} />
                 {String((project.geometry as Record<string, unknown>).areaTotalM2)} м²
               </div>
             )}
-            <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.01_240)]">
+            <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.012_240)]">
               <Calendar size={11} />
               {formatDate(project.updatedAt)}
             </div>
@@ -239,9 +239,9 @@ function OfferCard({
   const isPending = offer.status === "pending";
 
   return (
-    <div className="rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] p-5">
+    <div className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-5">
       <div className="flex items-start gap-4 mb-4">
-        <div className="w-11 h-11 rounded-xl bg-[oklch(0.18_0.01_240)] flex items-center justify-center flex-shrink-0">
+        <div className="w-11 h-11 rounded-xl bg-[oklch(0.14_0.02_255)] flex items-center justify-center flex-shrink-0">
           <Building2 size={20} className="text-[oklch(0.769_0.188_70.08)]" />
         </div>
         <div className="flex-1">
@@ -249,7 +249,7 @@ function OfferCard({
             {(offer as Offer & { partnerName?: string }).partnerName ??
               `Партнёр #${offer.partnerId?.slice(0, 8)}`}
           </p>
-          <p className="text-xs text-[oklch(0.5_0.01_240)] mt-0.5">
+          <p className="text-xs text-[oklch(0.5_0.012_240)] mt-0.5">
             {formatDate(offer.insertedAt)}
           </p>
         </div>
@@ -259,7 +259,7 @@ function OfferCard({
               ? "text-[oklch(0.769_0.188_70.08)] bg-[oklch(0.18_0.05_70)]"
               : offer.status === "accepted"
                 ? "text-[oklch(0.75_0.18_160)] bg-[oklch(0.18_0.05_160)]"
-                : "text-[oklch(0.55_0.01_240)] bg-[oklch(0.18_0.01_240)]"
+                : "text-[oklch(0.55_0.012_240)] bg-[oklch(0.14_0.02_255)]"
           }`}
         >
           {offer.status === "pending"
@@ -283,7 +283,7 @@ function OfferCard({
       </div>
 
       {offer.comment && (
-        <p className="text-xs text-[oklch(0.55_0.01_240)] mb-4 leading-relaxed bg-[oklch(0.16_0.01_240)] rounded-xl p-3">
+        <p className="text-xs text-[oklch(0.55_0.012_240)] mb-4 leading-relaxed bg-[oklch(0.13_0.018_255)] rounded-xl p-3">
           {offer.comment}
         </p>
       )}
@@ -304,7 +304,7 @@ function OfferCard({
           <button
             onClick={handleReject}
             disabled={!!loading}
-            className="flex-1 py-2.5 rounded-xl border border-[oklch(0.3_0.01_240)] text-[oklch(0.6_0.01_240)] text-sm font-medium hover:border-red-500/50 hover:text-red-400 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 rounded-xl border border-[oklch(0.26_0.03_255)] text-[oklch(0.6_0.01_240)] text-sm font-medium hover:border-red-500/50 hover:text-red-400 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
           >
             {loading === "reject" ? (
               <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -332,7 +332,7 @@ function DealCard({
   const status = (deal.status as string) ?? "pending";
   const colorCls =
     DEAL_STATUS_COLORS[status as keyof typeof DEAL_STATUS_COLORS] ??
-    "text-[oklch(0.55_0.01_240)] bg-[oklch(0.18_0.01_240)]";
+    "text-[oklch(0.55_0.012_240)] bg-[oklch(0.14_0.02_255)]";
   const label =
     DEAL_STATUS_LABELS[status as keyof typeof DEAL_STATUS_LABELS] ?? status;
 
@@ -345,18 +345,18 @@ function DealCard({
   return (
     <div
       onClick={onClick}
-      className="group rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] p-5 cursor-pointer hover:border-[oklch(0.769_0.188_70.08/0.3)] hover:bg-[oklch(0.15_0.01_240)] transition-all"
+      className="group rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-5 cursor-pointer hover:border-[oklch(0.769_0.188_70.08/0.3)] hover:bg-[oklch(0.15_0.01_240)] transition-all"
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-[oklch(0.18_0.01_240)] flex items-center justify-center">
+          <div className="w-11 h-11 rounded-xl bg-[oklch(0.14_0.02_255)] flex items-center justify-center">
             <Handshake size={20} className="text-[oklch(0.769_0.188_70.08)]" />
           </div>
           <div>
             <p className="text-sm font-semibold text-white">
               Сделка #{deal.id.slice(0, 8)}
             </p>
-            <p className="text-xs text-[oklch(0.5_0.01_240)] mt-0.5">
+            <p className="text-xs text-[oklch(0.5_0.012_240)] mt-0.5">
               {formatDate(deal.insertedAt)}
             </p>
           </div>
@@ -376,7 +376,7 @@ function DealCard({
 
       {milestones.length > 0 && (
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs text-[oklch(0.5_0.01_240)] mb-1">
+          <div className="flex items-center justify-between text-xs text-[oklch(0.5_0.012_240)] mb-1">
             <span>Этапы работ</span>
             <span>
               {completedCount} / {milestones.length}
@@ -406,7 +406,7 @@ function DealCard({
                 ) : (
                   <div className="w-3 h-3 rounded-full border border-[oklch(0.35_0.01_240)]" />
                 )}
-                <span className="text-[10px] text-[oklch(0.5_0.01_240)] truncate max-w-[80px]">
+                <span className="text-[10px] text-[oklch(0.5_0.012_240)] truncate max-w-[80px]">
                   {m.title}
                 </span>
               </div>
@@ -421,14 +421,14 @@ function DealCard({
       )}
 
       <div className="flex items-center justify-between mt-4 pt-3 border-t border-[oklch(0.18_0.01_240)]">
-        <span className="text-xs text-[oklch(0.5_0.01_240)]">
+        <span className="text-xs text-[oklch(0.5_0.012_240)]">
           {deal.escrowAccount
             ? `Эскроу: ${deal.escrowAccount.slice(0, 12)}...`
             : "Без эскроу"}
         </span>
         <ChevronRight
           size={14}
-          className="text-[oklch(0.35_0.01_240)] group-hover:text-[oklch(0.55_0.01_240)] transition-colors"
+          className="text-[oklch(0.35_0.01_240)] group-hover:text-[oklch(0.55_0.012_240)] transition-colors"
         />
       </div>
     </div>
@@ -454,7 +454,7 @@ function DealDetail({
   const milestones = deal.milestones ?? [];
 
   return (
-    <div className="rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] p-6">
+    <div className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-6">
       <div className="flex items-center justify-between mb-6">
         <h3
           className="text-base font-bold text-white"
@@ -464,7 +464,7 @@ function DealDetail({
         </h3>
         <button
           onClick={onClose}
-          className="text-[oklch(0.45_0.01_240)] hover:text-white transition-colors text-lg"
+          className="text-[oklch(0.45_0.012_240)] hover:text-white transition-colors text-lg"
         >
           ✕
         </button>
@@ -472,7 +472,7 @@ function DealDetail({
 
       {milestones.length > 0 ? (
         <div className="space-y-3">
-          <p className="text-xs font-semibold text-[oklch(0.5_0.01_240)] uppercase tracking-wider mb-3">
+          <p className="text-xs font-semibold text-[oklch(0.5_0.012_240)] uppercase tracking-wider mb-3">
             Этапы работ
           </p>
           {milestones.map((m, idx) => {
@@ -483,7 +483,7 @@ function DealDetail({
             return (
               <div
                 key={m.id}
-                className="rounded-xl border border-[oklch(0.2_0.01_240)] bg-[oklch(0.16_0.01_240)] p-4"
+                className="rounded-xl border border-[oklch(0.2_0.01_240)] bg-[oklch(0.13_0.018_255)] p-4"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3">
@@ -493,7 +493,7 @@ function DealDetail({
                           ? "bg-[oklch(0.75_0.18_160)] text-[oklch(0.1_0.01_160)]"
                           : ms === "paid"
                             ? "bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)]"
-                            : "bg-[oklch(0.22_0.01_240)] text-[oklch(0.55_0.01_240)]"
+                            : "bg-[oklch(0.17_0.02_255)] text-[oklch(0.55_0.012_240)]"
                       }`}
                     >
                       {ms === "completed" ? "✓" : idx + 1}
@@ -503,11 +503,11 @@ function DealDetail({
                         {m.title}
                       </p>
                       {m.description && (
-                        <p className="text-xs text-[oklch(0.5_0.01_240)] mt-0.5">
+                        <p className="text-xs text-[oklch(0.5_0.012_240)] mt-0.5">
                           {m.description}
                         </p>
                       )}
-                      <p className="text-xs text-[oklch(0.5_0.01_240)] mt-1">
+                      <p className="text-xs text-[oklch(0.5_0.012_240)] mt-1">
                         {statusLabel}
                       </p>
                     </div>
@@ -538,7 +538,7 @@ function DealDetail({
       ) : (
         <div className="text-center py-8">
           <Clock size={24} className="text-[oklch(0.4_0.01_240)] mx-auto mb-2" />
-          <p className="text-sm text-[oklch(0.5_0.01_240)]">
+          <p className="text-sm text-[oklch(0.5_0.012_240)]">
             Этапы ещё не добавлены
           </p>
           <p className="text-xs text-[oklch(0.4_0.01_240)] mt-1">
@@ -596,7 +596,7 @@ function OffersPanel({
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={onBack}
-          className="text-xs text-[oklch(0.5_0.01_240)] hover:text-white transition-colors flex items-center gap-1"
+          className="text-xs text-[oklch(0.5_0.012_240)] hover:text-white transition-colors flex items-center gap-1"
         >
           ← Все проекты
         </button>
@@ -640,12 +640,12 @@ function OffersPanel({
       ) : (
         <div className="space-y-4">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-[oklch(0.5_0.01_240)]">
+            <p className="text-sm text-[oklch(0.5_0.012_240)]">
               {offers.length} предложений
             </p>
             <button
               onClick={refetch}
-              className="text-xs text-[oklch(0.5_0.01_240)] hover:text-white flex items-center gap-1 transition-colors"
+              className="text-xs text-[oklch(0.5_0.012_240)] hover:text-white flex items-center gap-1 transition-colors"
             >
               <RefreshCw size={12} /> Обновить
             </button>
@@ -759,7 +759,7 @@ export default function CustomerDashboard() {
               {user?.firstName ? `Добро пожаловать, ${user.firstName}` : "Кабинет заказчика"}
             </h1>
             <div className="flex items-center gap-2 mt-1">
-              <p className="text-sm text-[oklch(0.5_0.01_240)]">
+              <p className="text-sm text-[oklch(0.5_0.012_240)]">
                 Кабинет заказчика
               </p>
               <span className="text-[oklch(0.3_0.01_240)]">·</span>
@@ -767,7 +767,7 @@ export default function CustomerDashboard() {
                 {isOnline ? (
                   <>
                     <Wifi size={11} className="text-[oklch(0.75_0.18_160)]" />
-                    <span className="text-[oklch(0.55_0.01_240)]">
+                    <span className="text-[oklch(0.55_0.012_240)]">
                       Синхронизировано
                     </span>
                   </>
@@ -780,9 +780,9 @@ export default function CustomerDashboard() {
               </div>
             </div>
           </div>
-          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.22_0.01_240)]">
+          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.20_0.025_255)]">
             <Smartphone size={14} className="text-[oklch(0.769_0.188_70.08)]" />
-            <span className="text-xs text-[oklch(0.5_0.01_240)]">
+            <span className="text-xs text-[oklch(0.5_0.012_240)]">
               Синхр. с приложением
             </span>
           </div>
@@ -816,11 +816,11 @@ export default function CustomerDashboard() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] p-4"
+              className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-4"
             >
               <div className="flex items-center gap-2 mb-2">
                 <stat.icon size={16} className={stat.color} />
-                <span className="text-xs text-[oklch(0.5_0.01_240)]">
+                <span className="text-xs text-[oklch(0.5_0.012_240)]">
                   {stat.label}
                 </span>
               </div>
@@ -842,7 +842,7 @@ export default function CustomerDashboard() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab.id
                   ? "bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)]"
-                  : "text-[oklch(0.55_0.01_240)] hover:text-white"
+                  : "text-[oklch(0.55_0.012_240)] hover:text-white"
               }`}
             >
               <tab.icon size={15} />
@@ -852,7 +852,7 @@ export default function CustomerDashboard() {
                   className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
                     activeTab === tab.id
                       ? "bg-[oklch(0.1_0.01_70/0.3)]"
-                      : "bg-[oklch(0.22_0.01_240)]"
+                      : "bg-[oklch(0.17_0.02_255)]"
                   }`}
                 >
                   {tab.count}
@@ -866,13 +866,13 @@ export default function CustomerDashboard() {
         {activeTab === "projects" && (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-[oklch(0.5_0.01_240)]">
+              <p className="text-sm text-[oklch(0.5_0.012_240)]">
                 {projectsLoading ? "Загрузка..." : `${projects.length} проектов`}
               </p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={refetchProjects}
-                  className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.01_240)] hover:text-white transition-colors px-2 py-1.5 rounded-lg hover:bg-[oklch(0.18_0.01_240)]"
+                  className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.012_240)] hover:text-white transition-colors px-2 py-1.5 rounded-lg hover:bg-[oklch(0.14_0.02_255)]"
                 >
                   <RefreshCw size={12} /> Обновить
                 </button>
@@ -903,7 +903,7 @@ export default function CustomerDashboard() {
                 title="Проектов пока нет"
                 description="Создайте первый проект в мобильном приложении Террадом — спроектируйте дом в 3D и примерьте его на участке через AR"
                 action={
-                  <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.22_0.01_240)]">
+                  <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.20_0.025_255)]">
                     <Smartphone
                       size={16}
                       className="text-[oklch(0.769_0.188_70.08)]"
@@ -964,12 +964,12 @@ export default function CustomerDashboard() {
           >
             <div>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-sm text-[oklch(0.5_0.01_240)]">
+                <p className="text-sm text-[oklch(0.5_0.012_240)]">
                   {dealsLoading ? "Загрузка..." : `${deals.length} сделок`}
                 </p>
                 <button
                   onClick={refetchDeals}
-                  className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.01_240)] hover:text-white transition-colors px-2 py-1.5 rounded-lg hover:bg-[oklch(0.18_0.01_240)]"
+                  className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.012_240)] hover:text-white transition-colors px-2 py-1.5 rounded-lg hover:bg-[oklch(0.14_0.02_255)]"
                 >
                   <RefreshCw size={12} /> Обновить
                 </button>

@@ -13,6 +13,7 @@ import RegisterPage from "./pages/RegisterPage";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import PartnerDashboard from "./pages/PartnerDashboard";
 import AdminPanel from "./pages/AdminPanel";
+import ProfilePage from "./pages/ProfilePage";
 
 function Router() {
   return (
@@ -56,6 +57,13 @@ function Router() {
         <AdminRoute>
           <AdminPanel />
         </AdminRoute>
+      </Route>
+
+      {/* Profile — accessible to all authenticated users */}
+      <Route path="/profile">
+        <ProtectedRoute>
+          <ProfilePage />
+        </ProtectedRoute>
       </Route>
 
       {/* 404 */}

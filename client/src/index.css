@@ -1,8 +1,9 @@
 /* ==========================================================================
-   ТЕРРАДОМ — Dark Tech PropTech Design System
-   Philosophy: Архитектурный цифровой. Тёмный графитовый фон, янтарный акцент,
-   blueprint-текстуры, glassmorphism для B2B-секций.
-   Fonts: Manrope (заголовки) + Inter (тело)
+   ТЕРРАДОМ — Dark Tech PropTech Design System v2
+   Philosophy: Тёмный фон с синим градиентом слева (глубокий индиго → тёмный),
+   янтарный акцент для CTA, glassmorphism для B2B-секций.
+   Fonts: Montserrat (заголовки, bold/extrabold) + Manrope (тело, UI)
+   Palette: bg #080C18, blue-left #0F1E4A→#1B3A8A, amber #F59E0B
    ========================================================================== */
 
 @import "tailwindcss";
@@ -53,25 +54,26 @@
   /* Terradom Dark Theme — always dark */
   --radius: 0.5rem;
 
-  /* Amber accent — янтарный */
+  /* Amber accent — янтарный CTA */
   --primary: oklch(0.769 0.188 70.08);
   --primary-foreground: oklch(0.1 0.01 70);
 
-  /* Deep graphite background */
-  --background: oklch(0.12 0.008 240);
+  /* Deep dark background #080C18 */
+  --background: oklch(0.09 0.015 255);
   --foreground: oklch(0.95 0.005 240);
 
-  --card: oklch(0.16 0.01 240);
+  /* Card — чуть светлее фона с синеватым оттенком */
+  --card: oklch(0.13 0.018 255);
   --card-foreground: oklch(0.92 0.005 240);
 
-  --popover: oklch(0.18 0.01 240);
+  --popover: oklch(0.14 0.018 255);
   --popover-foreground: oklch(0.92 0.005 240);
 
-  --secondary: oklch(0.20 0.012 240);
+  --secondary: oklch(0.17 0.02 255);
   --secondary-foreground: oklch(0.80 0.005 240);
 
-  --muted: oklch(0.22 0.01 240);
-  --muted-foreground: oklch(0.60 0.01 240);
+  --muted: oklch(0.19 0.018 255);
+  --muted-foreground: oklch(0.58 0.012 240);
 
   --accent: oklch(0.769 0.188 70.08);
   --accent-foreground: oklch(0.1 0.01 70);
@@ -79,24 +81,30 @@
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
 
-  --border: oklch(0.28 0.01 240);
-  --input: oklch(0.22 0.012 240);
+  --border: oklch(0.24 0.02 255);
+  --input: oklch(0.19 0.02 255);
   --ring: oklch(0.769 0.188 70.08);
 
   --chart-1: oklch(0.769 0.188 70.08);
-  --chart-2: oklch(0.65 0.15 70.08);
-  --chart-3: oklch(0.50 0.10 240);
-  --chart-4: oklch(0.40 0.08 240);
-  --chart-5: oklch(0.30 0.05 240);
+  --chart-2: oklch(0.55 0.18 255);
+  --chart-3: oklch(0.45 0.15 255);
+  --chart-4: oklch(0.35 0.10 255);
+  --chart-5: oklch(0.25 0.06 255);
 
-  --sidebar: oklch(0.14 0.01 240);
+  --sidebar: oklch(0.11 0.018 255);
   --sidebar-foreground: oklch(0.92 0.005 240);
   --sidebar-primary: oklch(0.769 0.188 70.08);
   --sidebar-primary-foreground: oklch(0.1 0.01 70);
-  --sidebar-accent: oklch(0.20 0.012 240);
+  --sidebar-accent: oklch(0.17 0.02 255);
   --sidebar-accent-foreground: oklch(0.92 0.005 240);
-  --sidebar-border: oklch(0.25 0.01 240);
+  --sidebar-border: oklch(0.22 0.02 255);
   --sidebar-ring: oklch(0.769 0.188 70.08);
+
+  /* Blue gradient variables (образец: синий слева → тёмный справа) */
+  --blue-deep: #0F1E4A;
+  --blue-mid: #1B3A8A;
+  --blue-bright: #2563EB;
+  --blue-accent: #3B82F6;
 }
 
 @layer base {
@@ -105,12 +113,20 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Manrope', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Глобальный синий градиент слева как на образце */
+    background-image: radial-gradient(
+      ellipse 60% 80% at 0% 50%,
+      oklch(0.22 0.08 255 / 0.35) 0%,
+      oklch(0.15 0.05 255 / 0.15) 40%,
+      transparent 70%
+    );
+    background-attachment: fixed;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Montserrat', 'Manrope', sans-serif;
     font-weight: 700;
   }
   button:not(:disabled),
@@ -155,29 +171,55 @@
     }
   }
 
+  /* ── Синий градиент слева (как на образце) ── */
+  .blue-gradient-left {
+    background: linear-gradient(
+      105deg,
+      oklch(0.22 0.10 255) 0%,
+      oklch(0.16 0.07 255) 30%,
+      oklch(0.11 0.025 255) 60%,
+      oklch(0.09 0.015 255) 100%
+    );
+  }
+
+  /* Hero section с синим градиентом слева */
+  .hero-gradient {
+    background:
+      radial-gradient(
+        ellipse 70% 100% at 0% 50%,
+        oklch(0.28 0.12 255 / 0.55) 0%,
+        oklch(0.18 0.08 255 / 0.30) 40%,
+        transparent 70%
+      ),
+      oklch(0.09 0.015 255);
+  }
+
   /* Blueprint grid background texture */
   .blueprint-bg {
-    background-color: oklch(0.12 0.015 240);
+    background-color: oklch(0.09 0.015 255);
     background-image:
-      linear-gradient(oklch(0.25 0.02 240 / 0.3) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(0.25 0.02 240 / 0.3) 1px, transparent 1px);
+      linear-gradient(oklch(0.25 0.04 255 / 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.25 0.04 255 / 0.2) 1px, transparent 1px);
     background-size: 40px 40px;
   }
 
   /* Glassmorphism card */
   .glass-card {
-    background: oklch(0.18 0.012 240 / 0.7);
+    background: oklch(0.14 0.02 255 / 0.7);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid oklch(0.35 0.02 240 / 0.5);
+    border: 1px solid oklch(0.30 0.04 255 / 0.5);
   }
 
   /* Amber glow button */
   .btn-amber {
     background: oklch(0.769 0.188 70.08);
     color: oklch(0.1 0.01 70);
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Montserrat', 'Manrope', sans-serif;
     font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
     transition: all 0.2s ease;
     box-shadow: 0 0 20px oklch(0.769 0.188 70.08 / 0.3);
   }
@@ -192,8 +234,11 @@
     background: transparent;
     color: oklch(0.769 0.188 70.08);
     border: 1.5px solid oklch(0.769 0.188 70.08);
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Montserrat', 'Manrope', sans-serif;
     font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
     transition: all 0.2s ease;
   }
   .btn-amber-outline:hover {
@@ -201,11 +246,37 @@
     box-shadow: 0 0 20px oklch(0.769 0.188 70.08 / 0.2);
   }
 
+  /* Blue accent button */
+  .btn-blue {
+    background: oklch(0.50 0.18 255);
+    color: #fff;
+    font-family: 'Montserrat', 'Manrope', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 20px oklch(0.50 0.18 255 / 0.3);
+  }
+  .btn-blue:hover {
+    background: oklch(0.55 0.20 255);
+    box-shadow: 0 0 30px oklch(0.50 0.18 255 / 0.5);
+    transform: translateY(-1px);
+  }
+
   /* Accent line */
   .accent-line {
     width: 48px;
     height: 3px;
     background: oklch(0.769 0.188 70.08);
+    border-radius: 2px;
+  }
+
+  /* Blue accent line */
+  .accent-line-blue {
+    width: 48px;
+    height: 3px;
+    background: oklch(0.50 0.18 255);
     border-radius: 2px;
   }
 
@@ -218,7 +289,7 @@
 
   /* Animated counter */
   .stat-number {
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Montserrat', 'Manrope', sans-serif;
     font-weight: 900;
     font-size: clamp(2.5rem, 5vw, 4rem);
     color: oklch(0.769 0.188 70.08);
@@ -236,10 +307,16 @@
     transform: translateY(0);
   }
 
-  /* Amber text gradient */
+  /* Amber text glow */
   .text-amber-glow {
     color: oklch(0.769 0.188 70.08);
     text-shadow: 0 0 30px oklch(0.769 0.188 70.08 / 0.4);
+  }
+
+  /* Blue text glow */
+  .text-blue-glow {
+    color: oklch(0.65 0.18 255);
+    text-shadow: 0 0 30px oklch(0.50 0.18 255 / 0.4);
   }
 
   /* Step number circle */
@@ -249,7 +326,7 @@
     border-radius: 50%;
     border: 2px solid oklch(0.769 0.188 70.08);
     color: oklch(0.769 0.188 70.08);
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Montserrat', 'Manrope', sans-serif;
     font-weight: 800;
     font-size: 1.125rem;
     display: flex;
@@ -260,10 +337,12 @@
 
   /* Nav link hover */
   .nav-link {
-    color: oklch(0.70 0.01 240);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
+    color: oklch(0.72 0.01 240);
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.875rem;
     font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     transition: color 0.2s;
     text-decoration: none;
   }
@@ -281,15 +360,34 @@
     border-color: oklch(0.769 0.188 70.08 / 0.4) !important;
   }
 
+  /* Section with blue left glow */
+  .section-blue-glow {
+    position: relative;
+  }
+  .section-blue-glow::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40%;
+    background: radial-gradient(
+      ellipse 80% 60% at 0% 50%,
+      oklch(0.30 0.12 255 / 0.25) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
   /* Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: oklch(0.12 0.008 240);
+    background: oklch(0.09 0.015 255);
   }
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.30 0.01 240);
+    background: oklch(0.28 0.04 255);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {

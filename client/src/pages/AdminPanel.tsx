@@ -24,14 +24,14 @@ function StatCard({
       className={`rounded-2xl p-5 border ${
         accent
           ? "bg-[oklch(0.769_0.188_70.08/0.08)] border-[oklch(0.769_0.188_70.08/0.25)]"
-          : "bg-[oklch(0.14_0.01_240)] border-[oklch(0.22_0.01_240)]"
+          : "bg-[oklch(0.14_0.01_240)] border-[oklch(0.20_0.025_255)]"
       }`}
     >
       <div
         className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${
           accent
             ? "bg-[oklch(0.769_0.188_70.08/0.2)] text-[oklch(0.769_0.188_70.08)]"
-            : "bg-[oklch(0.18_0.01_240)] text-[oklch(0.55_0.01_240)]"
+            : "bg-[oklch(0.14_0.02_255)] text-[oklch(0.55_0.012_240)]"
         }`}
       >
         {icon}
@@ -39,7 +39,7 @@ function StatCard({
       <p className="text-2xl font-bold text-white" style={{ fontFamily: "Manrope, sans-serif" }}>
         {value}
       </p>
-      <p className="text-sm text-[oklch(0.65_0.01_240)] mt-0.5">{label}</p>
+      <p className="text-sm text-[oklch(0.65_0.012_240)] mt-0.5">{label}</p>
     </div>
   );
 }
@@ -53,7 +53,7 @@ export default function AdminPanel() {
           <AlertTriangle size={20} className="text-red-400 flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-semibold text-red-300">Режим администратора</p>
-            <p className="text-xs text-[oklch(0.55_0.01_240)] mt-0.5">
+            <p className="text-xs text-[oklch(0.55_0.012_240)] mt-0.5">
               Вы вошли с правами администратора. Все действия логируются.
             </p>
           </div>
@@ -71,28 +71,28 @@ export default function AdminPanel() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <button
             onClick={() => toast.info("Управление спорами — в разработке (Этап 7)")}
-            className="rounded-2xl p-5 border border-[oklch(0.22_0.01_240)] bg-[oklch(0.14_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.4)] transition-all text-left"
+            className="rounded-2xl p-5 border border-[oklch(0.20_0.025_255)] bg-[oklch(0.14_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.4)] transition-all text-left"
           >
             <ShieldCheck size={20} className="text-[oklch(0.769_0.188_70.08)] mb-3" />
             <p className="text-sm font-semibold text-white">Споры и арбитраж</p>
-            <p className="text-xs text-[oklch(0.55_0.01_240)] mt-1">
+            <p className="text-xs text-[oklch(0.55_0.012_240)] mt-1">
               Разрешение конфликтов между заказчиками и подрядчиками
             </p>
           </button>
           <button
             onClick={() => toast.info("Пользователи — в разработке (Этап 7)")}
-            className="rounded-2xl p-5 border border-[oklch(0.22_0.01_240)] bg-[oklch(0.14_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.4)] transition-all text-left"
+            className="rounded-2xl p-5 border border-[oklch(0.20_0.025_255)] bg-[oklch(0.14_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.4)] transition-all text-left"
           >
             <Users size={20} className="text-[oklch(0.769_0.188_70.08)] mb-3" />
             <p className="text-sm font-semibold text-white">Управление пользователями</p>
-            <p className="text-xs text-[oklch(0.55_0.01_240)] mt-1">
+            <p className="text-xs text-[oklch(0.55_0.012_240)] mt-1">
               Верификация партнёров, блокировки, роли
             </p>
           </button>
         </div>
 
-        <div className="rounded-xl p-4 border border-dashed border-[oklch(0.28_0.01_240)] bg-[oklch(0.13_0.008_240)]">
-          <p className="text-xs text-[oklch(0.5_0.01_240)] text-center">
+        <div className="rounded-xl p-4 border border-dashed border-[oklch(0.24_0.03_255)] bg-[oklch(0.13_0.008_240)]">
+          <p className="text-xs text-[oklch(0.5_0.012_240)] text-center">
             Полный функционал администратора реализуется в{" "}
             <span className="text-[oklch(0.769_0.188_70.08)]">Этапе 7</span> плана разработки.
           </p>

@@ -42,7 +42,7 @@ export default function Footer() {
       className="relative overflow-hidden"
       style={{
         background: "oklch(0.10 0.008 240)",
-        borderTop: "1px solid oklch(0.22 0.01 240)",
+        borderTop: "1px solid oklch(0.17 0.02 255)",
       }}
     >
       {/* Top amber line */}
@@ -76,7 +76,7 @@ export default function Footer() {
 
             <p
               className="text-sm text-[oklch(0.50_0.01_240)] leading-relaxed mb-5 max-w-xs"
-              style={{ fontFamily: "Inter, sans-serif" }}
+              style={{ fontFamily: "Manrope, sans-serif" }}
             >
               Маркетплейс строительства домов с 3D/AR-конфигуратором. Безопасные
               сделки через эскроу, верифицированные подрядчики, цифровой
@@ -88,14 +88,14 @@ export default function Footer() {
               <a
                 href="mailto:hello@terradom.ru"
                 className="text-sm text-[oklch(0.60_0.01_240)] hover:text-[oklch(0.769_0.188_70.08)] transition-colors"
-                style={{ fontFamily: "Inter, sans-serif" }}
+                style={{ fontFamily: "Manrope, sans-serif" }}
               >
                 hello@terradom.ru
               </a>
               <a
                 href="tel:+78001234567"
                 className="text-sm text-[oklch(0.60_0.01_240)] hover:text-[oklch(0.769_0.188_70.08)] transition-colors"
-                style={{ fontFamily: "Inter, sans-serif" }}
+                style={{ fontFamily: "Manrope, sans-serif" }}
               >
                 8 800 123-45-67
               </a>
@@ -107,10 +107,10 @@ export default function Footer() {
                 onClick={() => toast.info("Google Play — скоро")}
                 className="px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 hover:opacity-80"
                 style={{
-                  background: "oklch(0.18 0.01 240)",
-                  border: "1px solid oklch(0.30 0.01 240)",
-                  color: "oklch(0.70 0.01 240)",
-                  fontFamily: "Inter, sans-serif",
+                  background: "oklch(0.14 0.02 255)",
+                  border: "1px solid oklch(0.26 0.03 255)",
+                  color: "oklch(0.70 0.012 240)",
+                  fontFamily: "Manrope, sans-serif",
                 }}
               >
                 Google Play
@@ -119,10 +119,10 @@ export default function Footer() {
                 onClick={() => toast.info("App Store — скоро")}
                 className="px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 hover:opacity-80"
                 style={{
-                  background: "oklch(0.18 0.01 240)",
-                  border: "1px solid oklch(0.30 0.01 240)",
-                  color: "oklch(0.70 0.01 240)",
-                  fontFamily: "Inter, sans-serif",
+                  background: "oklch(0.14 0.02 255)",
+                  border: "1px solid oklch(0.26 0.03 255)",
+                  color: "oklch(0.70 0.012 240)",
+                  fontFamily: "Manrope, sans-serif",
                 }}
               >
                 App Store
@@ -145,7 +145,7 @@ export default function Footer() {
                     <button
                       onClick={() => scrollTo(link.href)}
                       className="text-sm text-[oklch(0.50_0.01_240)] hover:text-[oklch(0.769_0.188_70.08)] transition-colors text-left"
-                      style={{ fontFamily: "Inter, sans-serif" }}
+                      style={{ fontFamily: "Manrope, sans-serif" }}
                     >
                       {link.label}
                     </button>
@@ -163,13 +163,13 @@ export default function Footer() {
         >
           <p
             className="text-xs text-[oklch(0.40_0.01_240)]"
-            style={{ fontFamily: "Inter, sans-serif" }}
+            style={{ fontFamily: "Manrope, sans-serif" }}
           >
             © 2026 ООО «Террадом». Все права защищены.
           </p>
           <p
             className="text-xs text-[oklch(0.35_0.01_240)]"
-            style={{ fontFamily: "Inter, sans-serif" }}
+            style={{ fontFamily: "Manrope, sans-serif" }}
           >
             ИНН 7700000000 · ОГРН 1234567890123 · г. Москва
           </p>

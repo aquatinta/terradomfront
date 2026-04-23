@@ -190,10 +190,10 @@ export default function Navbar() {
                     )}
                   </button>
                   <button
-                    onClick={() => { setUserMenuOpen(false); toast.info("Профиль — в разработке (Этап 2)"); }}
+                    onClick={() => { setUserMenuOpen(false); setMobileOpen(false); navigate('/profile'); }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[oklch(0.85_0.005_240)] hover:bg-[oklch(0.22_0.01_240)] hover:text-white transition-colors"
                   >
-                    <User size={15} className="text-[oklch(0.6_0.01_240)]" />
+                    <User size={15} className="text-[oklch(0.50_0.18_255)]" />
                     Профиль
                   </button>
                 </div>
@@ -229,7 +229,7 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[oklch(0.12_0.008_240/0.95)] backdrop-blur-xl border-b border-[oklch(0.28_0.01_240)]"
+          ? "bg-[oklch(0.09_0.015_255/0.95)] backdrop-blur-xl border-b border-[oklch(0.24_0.03_255)]"
           : "bg-transparent"
       }`}
     >
@@ -287,7 +287,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-[oklch(0.14_0.01_240/0.98)] backdrop-blur-xl border-b border-[oklch(0.28_0.01_240)] px-4 pb-6 pt-2">
+        <div className="md:hidden bg-[oklch(0.11_0.018_255/0.98)] backdrop-blur-xl border-b border-[oklch(0.24_0.03_255)] px-4 pb-6 pt-2">
           <div className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <button

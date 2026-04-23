@@ -67,7 +67,7 @@ export default function SecuritySection() {
       id="security"
       ref={sectionRef}
       className="py-24 lg:py-32 relative overflow-hidden"
-      style={{ background: "oklch(0.12 0.008 240)" }}
+      style={{ background: "oklch(0.09 0.015 255)" }}
     >
       {/* Blueprint bg */}
       <div
@@ -91,18 +91,18 @@ export default function SecuritySection() {
         {/* Header */}
         <div className="text-center mb-16 reveal">
           <div className="accent-line mx-auto mb-4" />
-          <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Inter, sans-serif" }}>
+          <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Manrope, sans-serif" }}>
             Безопасность сделки
           </p>
           <h2
             className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4"
-            style={{ fontFamily: "Manrope, sans-serif" }}
+            style={{ fontFamily: "Montserrat, sans-serif" }}
           >
             Ваши деньги защищены
             <br />
             <span className="text-amber-glow">на каждом этапе</span>
           </h2>
-          <p className="text-[oklch(0.60_0.01_240)] text-base lg:text-lg max-w-2xl mx-auto" style={{ fontFamily: "Inter, sans-serif" }}>
+          <p className="text-[oklch(0.60_0.01_240)] text-base lg:text-lg max-w-2xl mx-auto" style={{ fontFamily: "Manrope, sans-serif" }}>
             Эскроу, ЭДО и страхование — три уровня защиты, которые делают
             строительство предсказуемым и безопасным.
           </p>
@@ -138,13 +138,13 @@ export default function SecuritySection() {
                         style={{
                           background: "oklch(0.769 0.188 70.08 / 0.15)",
                           color: "oklch(0.769 0.188 70.08)",
-                          fontFamily: "Inter, sans-serif",
+                          fontFamily: "Manrope, sans-serif",
                         }}
                       >
                         {feature.highlight}
                       </span>
                     </div>
-                    <p className="text-xs text-[oklch(0.55_0.01_240)] leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
+                    <p className="text-xs text-[oklch(0.55_0.01_240)] leading-relaxed" style={{ fontFamily: "Manrope, sans-serif" }}>
                       {feature.description}
                     </p>
                   </div>
@@ -201,13 +201,13 @@ export default function SecuritySection() {
                         background: `oklch(${0.769 - i * 0.08} ${0.188 - i * 0.03} 70.08)`,
                       }}
                     />
-                    <span className="text-xs text-[oklch(0.60_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                    <span className="text-xs text-[oklch(0.60_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                       {m.label} — <strong className="text-white">{m.pct}%</strong>
                     </span>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-[oklch(0.45_0.01_240)] mt-4" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-xs text-[oklch(0.45_0.01_240)] mt-4" style={{ fontFamily: "Manrope, sans-serif" }}>
                 Средства разморожены и переведены подрядчику только после подтверждения этапа заказчиком или независимым технадзором.
               </p>
             </div>

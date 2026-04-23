@@ -30,7 +30,7 @@ export default function DownloadSection() {
       id="download"
       ref={sectionRef}
       className="py-24 lg:py-32 relative overflow-hidden"
-      style={{ background: "oklch(0.14 0.01 240)" }}
+      style={{ background: "oklch(0.11 0.018 255)" }}
     >
       {/* Background glow */}
       <div
@@ -59,18 +59,18 @@ export default function DownloadSection() {
           <div className="flex flex-col gap-6">
             <div className="reveal">
               <div className="accent-line mb-4" />
-              <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Manrope, sans-serif" }}>
                 Мобильное приложение
               </p>
               <h2
                 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4"
-                style={{ fontFamily: "Manrope, sans-serif" }}
+                style={{ fontFamily: "Montserrat, sans-serif" }}
               >
                 Скачайте приложение
                 <br />
                 <span className="text-amber-glow">Террадом</span>
               </h2>
-              <p className="text-[oklch(0.60_0.01_240)] text-base leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-[oklch(0.60_0.01_240)] text-base leading-relaxed" style={{ fontFamily: "Manrope, sans-serif" }}>
                 3D-конфигуратор, AR-режим, выбор подрядчика и трекинг строительства —
                 всё в одном приложении. Доступно для Android и iOS.
               </p>
@@ -93,7 +93,7 @@ export default function DownloadSection() {
                   >
                     <div className="w-1.5 h-1.5 rounded-full bg-[oklch(0.769_0.188_70.08)]" />
                   </div>
-                  <span className="text-xs text-[oklch(0.65_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                  <span className="text-xs text-[oklch(0.65_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                     {feature}
                   </span>
                 </div>
@@ -107,14 +107,14 @@ export default function DownloadSection() {
                 onClick={() => toast.info("Приложение скоро появится в Google Play")}
                 className="flex items-center gap-3 px-5 py-3.5 rounded-xl transition-all duration-200 hover:scale-[1.02]"
                 style={{
-                  background: "oklch(0.18 0.01 240)",
+                  background: "oklch(0.14 0.02 255)",
                   border: "1.5px solid oklch(0.35 0.01 240)",
                   color: "white",
                 }}
               >
                 <Smartphone size={22} className="text-[oklch(0.769_0.188_70.08)] flex-shrink-0" />
                 <div className="text-left">
-                  <div className="text-[10px] text-[oklch(0.55_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                  <div className="text-[10px] text-[oklch(0.55_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                     Скачать в
                   </div>
                   <div className="text-sm font-bold" style={{ fontFamily: "Manrope, sans-serif" }}>
@@ -128,14 +128,14 @@ export default function DownloadSection() {
                 onClick={() => toast.info("Приложение скоро появится в App Store")}
                 className="flex items-center gap-3 px-5 py-3.5 rounded-xl transition-all duration-200 hover:scale-[1.02]"
                 style={{
-                  background: "oklch(0.18 0.01 240)",
+                  background: "oklch(0.14 0.02 255)",
                   border: "1.5px solid oklch(0.35 0.01 240)",
                   color: "white",
                 }}
               >
                 <Apple size={22} className="text-[oklch(0.769_0.188_70.08)] flex-shrink-0" />
                 <div className="text-left">
-                  <div className="text-[10px] text-[oklch(0.55_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                  <div className="text-[10px] text-[oklch(0.55_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                     Скачать в
                   </div>
                   <div className="text-sm font-bold" style={{ fontFamily: "Manrope, sans-serif" }}>
@@ -147,7 +147,7 @@ export default function DownloadSection() {
 
             {/* APK direct */}
             <div className="reveal">
-              <p className="text-xs text-[oklch(0.45_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-xs text-[oklch(0.45_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                 Или{" "}
                 <button
                   onClick={() => toast.info("Прямая загрузка APK скоро будет доступна")}
@@ -206,7 +206,7 @@ export default function DownloadSection() {
                 <div className="text-xs font-bold text-white" style={{ fontFamily: "Manrope, sans-serif" }}>
                   4.9 / 5.0
                 </div>
-                <div className="text-[10px] text-[oklch(0.50_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                <div className="text-[10px] text-[oklch(0.50_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                   1 200+ отзывов
                 </div>
               </div>

@@ -44,7 +44,7 @@ function FaqItem({ faq, index }: { faq: typeof faqs[0]; index: number }) {
   return (
     <div
       className="border-b last:border-b-0"
-      style={{ borderColor: "oklch(0.22 0.01 240)" }}
+      style={{ borderColor: "oklch(0.17 0.02 255)" }}
     >
       <button
         onClick={() => setOpen(!open)}
@@ -78,7 +78,7 @@ function FaqItem({ faq, index }: { faq: typeof faqs[0]; index: number }) {
         <div className="pb-5 pl-8">
           <p
             className="text-sm text-[oklch(0.60_0.01_240)] leading-relaxed"
-            style={{ fontFamily: "Inter, sans-serif" }}
+            style={{ fontFamily: "Manrope, sans-serif" }}
           >
             {faq.answer}
           </p>
@@ -109,7 +109,7 @@ export default function FaqSection() {
     <section
       ref={sectionRef}
       className="py-24 lg:py-32 relative overflow-hidden"
-      style={{ background: "oklch(0.12 0.008 240)" }}
+      style={{ background: "oklch(0.09 0.015 255)" }}
     >
       <div className="container mx-auto max-w-7xl px-4 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
@@ -117,18 +117,18 @@ export default function FaqSection() {
           {/* Left: Header */}
           <div className="flex flex-col gap-4 reveal">
             <div className="accent-line mb-2" />
-            <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest" style={{ fontFamily: "Inter, sans-serif" }}>
+            <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest" style={{ fontFamily: "Manrope, sans-serif" }}>
               Частые вопросы
             </p>
             <h2
               className="text-3xl sm:text-4xl lg:text-5xl font-black text-white"
-              style={{ fontFamily: "Manrope, sans-serif" }}
+              style={{ fontFamily: "Montserrat, sans-serif" }}
             >
               Ответы на
               <br />
               <span className="text-amber-glow">ваши вопросы</span>
             </h2>
-            <p className="text-[oklch(0.55_0.01_240)] text-base leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
+            <p className="text-[oklch(0.55_0.01_240)] text-base leading-relaxed" style={{ fontFamily: "Manrope, sans-serif" }}>
               Не нашли ответ? Напишите нам — ответим в течение рабочего дня.
             </p>
             <div className="mt-4">

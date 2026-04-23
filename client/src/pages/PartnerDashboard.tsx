@@ -107,7 +107,7 @@ const DEAL_STATUS_LABELS: Record<string, string> = {
 };
 
 const DEAL_STATUS_COLORS: Record<string, string> = {
-  draft: "text-[oklch(0.55_0.01_240)] bg-[oklch(0.18_0.01_240)]",
+  draft: "text-[oklch(0.55_0.012_240)] bg-[oklch(0.14_0.02_255)]",
   pending_payment: "text-[oklch(0.769_0.188_70.08)] bg-[oklch(0.769_0.188_70.08/0.1)]",
   in_progress: "text-[oklch(0.7_0.15_240)] bg-[oklch(0.7_0.15_240/0.1)]",
   completed: "text-[oklch(0.75_0.18_160)] bg-[oklch(0.75_0.18_160/0.1)]",
@@ -163,7 +163,7 @@ function BidFormModal({ tender, existingBid, onSubmit, onClose, submitting }: Bi
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-lg bg-[oklch(0.13_0.008_240)] border border-[oklch(0.22_0.01_240)] rounded-2xl shadow-2xl">
+      <div className="relative w-full max-w-lg bg-[oklch(0.13_0.008_240)] border border-[oklch(0.20_0.025_255)] rounded-2xl shadow-2xl">
         {/* Header */}
         <div className="flex items-start justify-between p-6 border-b border-[oklch(0.18_0.01_240)]">
           <div>
@@ -173,15 +173,15 @@ function BidFormModal({ tender, existingBid, onSubmit, onClose, submitting }: Bi
             >
               {existingBid ? "Ваша ставка" : "Подать ставку"}
             </h2>
-            <p className="text-sm text-[oklch(0.5_0.01_240)] mt-0.5 line-clamp-1">
+            <p className="text-sm text-[oklch(0.5_0.012_240)] mt-0.5 line-clamp-1">
               {tender.title}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-[oklch(0.18_0.01_240)] transition-colors"
+            className="p-1.5 rounded-lg hover:bg-[oklch(0.14_0.02_255)] transition-colors"
           >
-            <X size={18} className="text-[oklch(0.5_0.01_240)]" />
+            <X size={18} className="text-[oklch(0.5_0.012_240)]" />
           </button>
         </div>
 
@@ -202,27 +202,27 @@ function BidFormModal({ tender, existingBid, onSubmit, onClose, submitting }: Bi
         {existingBid ? (
           /* Show existing bid read-only */
           <div className="p-6 space-y-4">
-            <div className="p-4 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.22_0.01_240)] space-y-3">
+            <div className="p-4 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.20_0.025_255)] space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-[oklch(0.5_0.01_240)]">Ваша цена</span>
+                <span className="text-sm text-[oklch(0.5_0.012_240)]">Ваша цена</span>
                 <span className="text-sm font-bold text-white">
                   {formatMoney(existingBid.totalPrice)}
                 </span>
               </div>
               {existingBid.timelineDays != null && (
                 <div className="flex justify-between">
-                  <span className="text-sm text-[oklch(0.5_0.01_240)]">Срок</span>
+                  <span className="text-sm text-[oklch(0.5_0.012_240)]">Срок</span>
                   <span className="text-sm text-white">{existingBid.timelineDays} дн.</span>
                 </div>
               )}
               {existingBid.comment && (
                 <div>
-                  <span className="text-xs text-[oklch(0.5_0.01_240)]">Комментарий</span>
+                  <span className="text-xs text-[oklch(0.5_0.012_240)]">Комментарий</span>
                   <p className="text-sm text-[oklch(0.7_0.01_240)] mt-1">{existingBid.comment}</p>
                 </div>
               )}
-              <div className="flex justify-between pt-2 border-t border-[oklch(0.22_0.01_240)]">
-                <span className="text-xs text-[oklch(0.5_0.01_240)]">Статус</span>
+              <div className="flex justify-between pt-2 border-t border-[oklch(0.20_0.025_255)]">
+                <span className="text-xs text-[oklch(0.5_0.012_240)]">Статус</span>
                 <span
                   className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                     existingBid.status === "accepted"
@@ -250,7 +250,7 @@ function BidFormModal({ tender, existingBid, onSubmit, onClose, submitting }: Bi
             )}
             <button
               onClick={onClose}
-              className="w-full py-2.5 rounded-xl bg-[oklch(0.18_0.01_240)] text-[oklch(0.7_0.01_240)] text-sm font-medium hover:bg-[oklch(0.22_0.01_240)] transition-colors"
+              className="w-full py-2.5 rounded-xl bg-[oklch(0.14_0.02_255)] text-[oklch(0.7_0.01_240)] text-sm font-medium hover:bg-[oklch(0.17_0.02_255)] transition-colors"
             >
               Закрыть
             </button>
@@ -269,7 +269,7 @@ function BidFormModal({ tender, existingBid, onSubmit, onClose, submitting }: Bi
                 placeholder="Введите сумму"
                 min={1}
                 required
-                className="w-full px-4 py-3 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.22_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors"
+                className="w-full px-4 py-3 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.20_0.025_255)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors"
               />
               {isSuspiciousLow && (
                 <p className="text-xs text-orange-400 mt-1 flex items-center gap-1">
@@ -290,7 +290,7 @@ function BidFormModal({ tender, existingBid, onSubmit, onClose, submitting }: Bi
                 placeholder="Например: 90"
                 min={1}
                 required
-                className="w-full px-4 py-3 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.22_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors"
+                className="w-full px-4 py-3 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.20_0.025_255)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors"
               />
             </div>
 
@@ -303,7 +303,7 @@ function BidFormModal({ tender, existingBid, onSubmit, onClose, submitting }: Bi
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Опишите ваш опыт, технологию, гарантии..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.22_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors resize-none"
+                className="w-full px-4 py-3 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.20_0.025_255)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors resize-none"
               />
             </div>
 
@@ -311,7 +311,7 @@ function BidFormModal({ tender, existingBid, onSubmit, onClose, submitting }: Bi
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-2.5 rounded-xl bg-[oklch(0.18_0.01_240)] text-[oklch(0.7_0.01_240)] text-sm font-medium hover:bg-[oklch(0.22_0.01_240)] transition-colors"
+                className="flex-1 py-2.5 rounded-xl bg-[oklch(0.14_0.02_255)] text-[oklch(0.7_0.01_240)] text-sm font-medium hover:bg-[oklch(0.17_0.02_255)] transition-colors"
               >
                 Отмена
               </button>
@@ -359,7 +359,7 @@ function TenderCard({
     new Date(String(tender.deadline)).getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000;
 
   return (
-    <div className="rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] overflow-hidden transition-all duration-200 hover:border-[oklch(0.769_0.188_70.08/0.3)]">
+    <div className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] overflow-hidden transition-all duration-200 hover:border-[oklch(0.769_0.188_70.08/0.3)]">
       <div className="p-5">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1 min-w-0">
@@ -410,22 +410,22 @@ function TenderCard({
         {/* Meta tags */}
         <div className="flex flex-wrap gap-2 mb-4">
           {tender.region && (
-            <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.01_240)]">
+            <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.012_240)]">
               <MapPin size={11} />
               {tender.region}
             </div>
           )}
           {tender.technology && (
-            <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.01_240)]">
+            <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.012_240)]">
               <Building2 size={11} />
               {TECH_LABELS[tender.technology] ?? tender.technology}
             </div>
           )}
-          <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.01_240)]">
+          <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.012_240)]">
             <Calendar size={11} />
             {deadlineStr}
           </div>
-          <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.01_240)]">
+          <div className="flex items-center gap-1 text-xs text-[oklch(0.5_0.012_240)]">
             <Tag size={11} />
             {tender.bidsCount}{" "}
             {tender.bidsCount === 1
@@ -440,7 +440,7 @@ function TenderCard({
         {tender.description && (
           <div className="mb-4">
             <p
-              className={`text-xs text-[oklch(0.5_0.01_240)] leading-relaxed ${
+              className={`text-xs text-[oklch(0.5_0.012_240)] leading-relaxed ${
                 !expanded ? "line-clamp-2" : ""
               }`}
             >
@@ -474,7 +474,7 @@ function TenderCard({
             onClick={() => onBid(tender)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
               ownBid
-                ? "bg-[oklch(0.18_0.01_240)] text-[oklch(0.6_0.01_240)] hover:bg-[oklch(0.22_0.01_240)]"
+                ? "bg-[oklch(0.14_0.02_255)] text-[oklch(0.6_0.01_240)] hover:bg-[oklch(0.17_0.02_255)]"
                 : "bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)] hover:bg-[oklch(0.72_0.19_70.08)]"
             }`}
           >
@@ -500,19 +500,19 @@ function TenderCard({
 function OfferCard({ offer }: { offer: Offer }) {
   const status = offer.status as string;
   const colorCls =
-    OFFER_STATUS_COLORS[status] ?? "text-[oklch(0.55_0.01_240)] bg-[oklch(0.18_0.01_240)]";
+    OFFER_STATUS_COLORS[status] ?? "text-[oklch(0.55_0.012_240)] bg-[oklch(0.14_0.02_255)]";
   const label = OFFER_STATUS_LABELS[status] ?? status;
 
   return (
-    <div className="rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] p-5">
+    <div className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-5">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[oklch(0.18_0.01_240)] flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[oklch(0.14_0.02_255)] flex items-center justify-center flex-shrink-0">
             <FileText size={18} className="text-[oklch(0.769_0.188_70.08)]" />
           </div>
           <div>
             <p className="text-sm font-semibold text-white">Оффер #{offer.id.slice(0, 8)}</p>
-            <p className="text-xs text-[oklch(0.5_0.01_240)] mt-0.5">
+            <p className="text-xs text-[oklch(0.5_0.012_240)] mt-0.5">
               {formatDate(offer.insertedAt)}
             </p>
           </div>
@@ -524,11 +524,11 @@ function OfferCard({ offer }: { offer: Offer }) {
 
       <div className="flex items-center justify-between pt-3 border-t border-[oklch(0.18_0.01_240)]">
         <div>
-          <p className="text-xs text-[oklch(0.5_0.01_240)]">Сумма предложения</p>
+          <p className="text-xs text-[oklch(0.5_0.012_240)]">Сумма предложения</p>
           <p className="text-lg font-bold text-white mt-0.5">{formatMoney(offer.totalPrice)}</p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-[oklch(0.5_0.01_240)]">Проект</p>
+          <p className="text-xs text-[oklch(0.5_0.012_240)]">Проект</p>
           <p className="text-xs text-[oklch(0.7_0.01_240)] mt-0.5 font-mono">
             #{offer.projectId.slice(0, 8)}
           </p>
@@ -536,7 +536,7 @@ function OfferCard({ offer }: { offer: Offer }) {
       </div>
 
       {offer.comment && (
-        <p className="text-xs text-[oklch(0.5_0.01_240)] mt-3 pt-3 border-t border-[oklch(0.18_0.01_240)] line-clamp-2">
+        <p className="text-xs text-[oklch(0.5_0.012_240)] mt-3 pt-3 border-t border-[oklch(0.18_0.01_240)] line-clamp-2">
           {offer.comment}
         </p>
       )}
@@ -568,7 +568,7 @@ function DealCard({
   const [expanded, setExpanded] = useState(false);
   const status = deal.status as string;
   const colorCls =
-    DEAL_STATUS_COLORS[status] ?? "text-[oklch(0.55_0.01_240)] bg-[oklch(0.18_0.01_240)]";
+    DEAL_STATUS_COLORS[status] ?? "text-[oklch(0.55_0.012_240)] bg-[oklch(0.14_0.02_255)]";
   const label = DEAL_STATUS_LABELS[status] ?? status;
   const milestones = deal.milestones ?? [];
   const completedCount = milestones.filter((m) => m.status === "completed").length;
@@ -577,16 +577,16 @@ function DealCard({
   const canComplete = (m: Milestone) => m.status === "paid_held";
 
   return (
-    <div className="rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] overflow-hidden">
+    <div className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] overflow-hidden">
       <div className="p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-[oklch(0.18_0.01_240)] flex items-center justify-center">
+            <div className="w-11 h-11 rounded-xl bg-[oklch(0.14_0.02_255)] flex items-center justify-center">
               <Handshake size={20} className="text-[oklch(0.769_0.188_70.08)]" />
             </div>
             <div>
               <p className="text-sm font-semibold text-white">Сделка #{deal.id.slice(0, 8)}</p>
-              <p className="text-xs text-[oklch(0.5_0.01_240)] mt-0.5">
+              <p className="text-xs text-[oklch(0.5_0.012_240)] mt-0.5">
                 {formatDate(deal.insertedAt)}
               </p>
             </div>
@@ -602,7 +602,7 @@ function DealCard({
 
         {milestones.length > 0 && (
           <>
-            <div className="flex items-center justify-between text-xs text-[oklch(0.5_0.01_240)] mb-1.5">
+            <div className="flex items-center justify-between text-xs text-[oklch(0.5_0.012_240)] mb-1.5">
               <span>Прогресс этапов</span>
               <span>
                 {completedCount} / {milestones.length}
@@ -629,7 +629,7 @@ function DealCard({
         )}
 
         {deal.escrowAccount && (
-          <div className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.01_240)]">
+          <div className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.012_240)]">
             <CircleDollarSign size={11} className="text-[oklch(0.75_0.18_160)]" />
             Эскроу активен
           </div>
@@ -665,7 +665,7 @@ function DealCard({
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-white truncate">{m.title}</p>
-                    <p className="text-[11px] text-[oklch(0.5_0.01_240)] mt-0.5">
+                    <p className="text-[11px] text-[oklch(0.5_0.012_240)] mt-0.5">
                       {MILESTONE_STATUS_LABELS[ms] ?? ms}
                     </p>
                   </div>
@@ -714,7 +714,7 @@ function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.22_0.01_240)] flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-2xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.20_0.025_255)] flex items-center justify-center mb-4">
         <Icon size={28} className="text-[oklch(0.4_0.01_240)]" />
       </div>
       <h3
@@ -723,7 +723,7 @@ function EmptyState({
       >
         {title}
       </h3>
-      <p className="text-sm text-[oklch(0.5_0.01_240)] max-w-xs leading-relaxed">
+      <p className="text-sm text-[oklch(0.5_0.012_240)] max-w-xs leading-relaxed">
         {description}
       </p>
       {action && <div className="mt-4">{action}</div>}
@@ -849,7 +849,7 @@ export default function PartnerDashboard() {
               {user?.firstName ? `Кабинет ${user.firstName}` : "Кабинет партнёра"}
             </h1>
             <div className="flex items-center gap-2 mt-1">
-              <p className="text-sm text-[oklch(0.5_0.01_240)]">
+              <p className="text-sm text-[oklch(0.5_0.012_240)]">
                 {user?.role === "supplier" ? "Поставщик" : "Подрядчик"}
               </p>
               <span className="text-[oklch(0.3_0.01_240)]">·</span>
@@ -857,7 +857,7 @@ export default function PartnerDashboard() {
                 {isOnline ? (
                   <>
                     <Wifi size={11} className="text-[oklch(0.75_0.18_160)]" />
-                    <span className="text-[oklch(0.55_0.01_240)]">Онлайн</span>
+                    <span className="text-[oklch(0.55_0.012_240)]">Онлайн</span>
                   </>
                 ) : (
                   <>
@@ -868,9 +868,9 @@ export default function PartnerDashboard() {
               </div>
             </div>
           </div>
-          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.22_0.01_240)]">
+          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.20_0.025_255)]">
             <Smartphone size={14} className="text-[oklch(0.769_0.188_70.08)]" />
-            <span className="text-xs text-[oklch(0.5_0.01_240)]">Обновление каждые 30с</span>
+            <span className="text-xs text-[oklch(0.5_0.012_240)]">Обновление каждые 30с</span>
           </div>
         </div>
 
@@ -908,11 +908,11 @@ export default function PartnerDashboard() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] p-4"
+              className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-4"
             >
               <div className="flex items-center gap-2 mb-2">
                 <stat.icon size={16} className={stat.color} />
-                <span className="text-xs text-[oklch(0.5_0.01_240)] truncate">{stat.label}</span>
+                <span className="text-xs text-[oklch(0.5_0.012_240)] truncate">{stat.label}</span>
               </div>
               <p className={`font-bold text-white ${stat.isText ? "text-base" : "text-2xl"}`}>
                 {stat.value}
@@ -922,7 +922,7 @@ export default function PartnerDashboard() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 rounded-xl bg-[oklch(0.13_0.008_240)] border border-[oklch(0.22_0.01_240)] mb-6">
+        <div className="flex gap-1 p-1 rounded-xl bg-[oklch(0.13_0.008_240)] border border-[oklch(0.20_0.025_255)] mb-6">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -930,7 +930,7 @@ export default function PartnerDashboard() {
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab.id
                   ? "bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)]"
-                  : "text-[oklch(0.5_0.01_240)] hover:text-white hover:bg-[oklch(0.18_0.01_240)]"
+                  : "text-[oklch(0.5_0.012_240)] hover:text-white hover:bg-[oklch(0.14_0.02_255)]"
               }`}
             >
               <tab.icon size={14} />
@@ -965,12 +965,12 @@ export default function PartnerDashboard() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Поиск по тендерам..."
-                  className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[oklch(0.13_0.008_240)] border border-[oklch(0.22_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.5)] transition-colors"
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[oklch(0.13_0.008_240)] border border-[oklch(0.20_0.025_255)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.5)] transition-colors"
                 />
               </div>
               <button
                 onClick={refreshTenders}
-                className="p-2.5 rounded-xl bg-[oklch(0.13_0.008_240)] border border-[oklch(0.22_0.01_240)] text-[oklch(0.5_0.01_240)] hover:text-white hover:border-[oklch(0.769_0.188_70.08/0.4)] transition-all"
+                className="p-2.5 rounded-xl bg-[oklch(0.13_0.008_240)] border border-[oklch(0.20_0.025_255)] text-[oklch(0.5_0.012_240)] hover:text-white hover:border-[oklch(0.769_0.188_70.08/0.4)] transition-all"
               >
                 <RefreshCw size={15} />
               </button>
@@ -985,7 +985,7 @@ export default function PartnerDashboard() {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     (filters.status ?? "open") === s
                       ? "bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)]"
-                      : "bg-[oklch(0.16_0.01_240)] text-[oklch(0.5_0.01_240)] hover:bg-[oklch(0.2_0.01_240)]"
+                      : "bg-[oklch(0.13_0.018_255)] text-[oklch(0.5_0.012_240)] hover:bg-[oklch(0.2_0.01_240)]"
                   }`}
                 >
                   {s === "open" ? "Открытые" : "Все"}
@@ -1031,13 +1031,13 @@ export default function PartnerDashboard() {
         {activeTab === "offers" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[oklch(0.5_0.01_240)]">
+              <p className="text-sm text-[oklch(0.5_0.012_240)]">
                 {offers.length}{" "}
                 {offers.length === 1 ? "оффер" : offers.length < 5 ? "оффера" : "офферов"}
               </p>
               <button
                 onClick={refreshDeals}
-                className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.01_240)] hover:text-white transition-colors"
+                className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.012_240)] hover:text-white transition-colors"
               >
                 <RefreshCw size={12} />
                 Обновить
@@ -1082,13 +1082,13 @@ export default function PartnerDashboard() {
         {activeTab === "deals" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[oklch(0.5_0.01_240)]">
+              <p className="text-sm text-[oklch(0.5_0.012_240)]">
                 {deals.length}{" "}
                 {deals.length === 1 ? "сделка" : deals.length < 5 ? "сделки" : "сделок"}
               </p>
               <button
                 onClick={refreshDeals}
-                className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.01_240)] hover:text-white transition-colors"
+                className="flex items-center gap-1.5 text-xs text-[oklch(0.5_0.012_240)] hover:text-white transition-colors"
               >
                 <RefreshCw size={12} />
                 Обновить

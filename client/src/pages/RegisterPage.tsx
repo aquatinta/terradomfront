@@ -112,7 +112,7 @@ function Field({
 }
 
 const inputCls =
-  "w-full pl-10 pr-4 py-3 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.25_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] focus:ring-1 focus:ring-[oklch(0.769_0.188_70.08/0.3)] transition-colors";
+  "w-full pl-10 pr-4 py-3 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.25_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] focus:ring-1 focus:ring-[oklch(0.769_0.188_70.08/0.3)] transition-colors";
 
 // ---------------------------------------------------------------------------
 // Customer registration form
@@ -154,37 +154,37 @@ function CustomerForm({ onSuccess }: { onSuccess: () => void }) {
       <div className="grid grid-cols-2 gap-4">
         <Field label="Имя" error={errors.firstName?.message}>
           <div className="relative">
-            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
             <input {...register("firstName")} placeholder="Иван" className={inputCls} />
           </div>
         </Field>
         <Field label="Фамилия" error={errors.lastName?.message}>
           <div className="relative">
-            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
             <input {...register("lastName")} placeholder="Иванов" className={inputCls} />
           </div>
         </Field>
       </div>
       <Field label="Телефон" error={errors.phone?.message}>
         <div className="relative">
-          <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+          <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
           <input {...register("phone")} type="tel" placeholder="+7 (900) 000-00-00" className={inputCls} />
         </div>
       </Field>
       <Field label="Пароль" error={errors.password?.message}>
         <div className="relative">
-          <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+          <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
           <input {...register("password")} type={showPwd ? "text" : "password"} placeholder="Минимум 6 символов" className={`${inputCls} pr-12`} />
-          <button type="button" onClick={() => setShowPwd((v) => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)] hover:text-[oklch(0.65_0.01_240)] transition-colors">
+          <button type="button" onClick={() => setShowPwd((v) => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)] hover:text-[oklch(0.65_0.012_240)] transition-colors">
             {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
       </Field>
       <Field label="Повторите пароль" error={errors.confirmPassword?.message}>
         <div className="relative">
-          <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+          <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
           <input {...register("confirmPassword")} type={showConfirm ? "text" : "password"} placeholder="Повторите пароль" className={`${inputCls} pr-12`} />
-          <button type="button" onClick={() => setShowConfirm((v) => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)] hover:text-[oklch(0.65_0.01_240)] transition-colors">
+          <button type="button" onClick={() => setShowConfirm((v) => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)] hover:text-[oklch(0.65_0.012_240)] transition-colors">
             {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
@@ -247,49 +247,49 @@ function PartnerForm({ role, onSuccess }: { role: "contractor" | "supplier"; onS
       <div className="grid grid-cols-2 gap-4">
         <Field label="Имя" error={errors.firstName?.message}>
           <div className="relative">
-            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
             <input {...register("firstName")} placeholder="Иван" className={inputCls} />
           </div>
         </Field>
         <Field label="Фамилия" error={errors.lastName?.message}>
           <div className="relative">
-            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
             <input {...register("lastName")} placeholder="Иванов" className={inputCls} />
           </div>
         </Field>
       </div>
       <Field label="Название компании" error={errors.companyName?.message}>
         <div className="relative">
-          <Building2 size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+          <Building2 size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
           <input {...register("companyName")} placeholder={role === "contractor" ? "ООО «СтройГрупп»" : "ООО «МатериалПлюс»"} className={inputCls} />
         </div>
       </Field>
       <Field label="ИНН" error={errors.inn?.message}>
         <div className="relative">
-          <Building2 size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+          <Building2 size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
           <input {...register("inn")} placeholder="1234567890" maxLength={12} className={inputCls} />
         </div>
       </Field>
       <Field label="Телефон" error={errors.phone?.message}>
         <div className="relative">
-          <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+          <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
           <input {...register("phone")} type="tel" placeholder="+7 (900) 000-00-00" className={inputCls} />
         </div>
       </Field>
       <Field label="Пароль" error={errors.password?.message}>
         <div className="relative">
-          <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+          <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
           <input {...register("password")} type={showPwd ? "text" : "password"} placeholder="Минимум 6 символов" className={`${inputCls} pr-12`} />
-          <button type="button" onClick={() => setShowPwd((v) => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)] hover:text-[oklch(0.65_0.01_240)] transition-colors">
+          <button type="button" onClick={() => setShowPwd((v) => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)] hover:text-[oklch(0.65_0.012_240)] transition-colors">
             {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
       </Field>
       <Field label="Повторите пароль" error={errors.confirmPassword?.message}>
         <div className="relative">
-          <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]" />
+          <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]" />
           <input {...register("confirmPassword")} type={showConfirm ? "text" : "password"} placeholder="Повторите пароль" className={`${inputCls} pr-12`} />
-          <button type="button" onClick={() => setShowConfirm((v) => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)] hover:text-[oklch(0.65_0.01_240)] transition-colors">
+          <button type="button" onClick={() => setShowConfirm((v) => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)] hover:text-[oklch(0.65_0.012_240)] transition-colors">
             {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
@@ -323,7 +323,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[oklch(0.10_0.008_240)] flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-[oklch(0.09_0.015_255)] flex items-center justify-center px-4 py-10">
       {/* Blueprint grid background */}
       <div
         className="fixed inset-0 opacity-[0.03] pointer-events-none"
@@ -350,31 +350,31 @@ export default function RegisterPage() {
               Терра<span className="text-[oklch(0.769_0.188_70.08)]">дом</span>
             </span>
           </a>
-          <p className="text-sm text-[oklch(0.55_0.01_240)] mt-3">
+          <p className="text-sm text-[oklch(0.55_0.012_240)] mt-3">
             {selectedRole ? "Заполните данные для регистрации" : "Выберите тип аккаунта"}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] p-8 shadow-2xl">
+        <div className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-8 shadow-2xl">
 
           {/* ── Step 1: Role selection ── */}
           {!selectedRole && (
             <div className="space-y-3">
-              <h1 className="text-xl font-bold text-white mb-5" style={{ fontFamily: "Manrope, sans-serif" }}>
+              <h1 className="text-xl font-bold text-white mb-5" style={{ fontFamily: "Montserrat, sans-serif" }}>
                 Кто вы?
               </h1>
               {ROLES.map((r) => (
                 <button
                   key={r.id}
                   onClick={() => setSelectedRole(r.id)}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.16_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.5)] hover:bg-[oklch(0.18_0.01_240)] transition-all text-left group"
+                  className="w-full flex items-center gap-4 p-4 rounded-xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.018_255)] hover:border-[oklch(0.769_0.188_70.08/0.5)] hover:bg-[oklch(0.14_0.02_255)] transition-all text-left group"
                 >
                   <span className="text-2xl">{r.icon}</span>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-white group-hover:text-[oklch(0.769_0.188_70.08)] transition-colors">
                       {r.title}
                     </p>
-                    <p className="text-xs text-[oklch(0.5_0.01_240)] mt-0.5 leading-relaxed">{r.desc}</p>
+                    <p className="text-xs text-[oklch(0.5_0.012_240)] mt-0.5 leading-relaxed">{r.desc}</p>
                   </div>
                   <ArrowRight size={16} className="text-[oklch(0.35_0.01_240)] group-hover:text-[oklch(0.769_0.188_70.08)] transition-colors flex-shrink-0" />
                 </button>
@@ -388,11 +388,11 @@ export default function RegisterPage() {
               <div className="flex items-center gap-3 mb-6">
                 <button
                   onClick={() => setSelectedRole(null)}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center bg-[oklch(0.18_0.01_240)] hover:bg-[oklch(0.22_0.01_240)] text-[oklch(0.6_0.01_240)] hover:text-white transition-colors"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center bg-[oklch(0.14_0.02_255)] hover:bg-[oklch(0.17_0.02_255)] text-[oklch(0.6_0.01_240)] hover:text-white transition-colors"
                 >
                   <ArrowLeft size={16} />
                 </button>
-                <h1 className="text-xl font-bold text-white" style={{ fontFamily: "Manrope, sans-serif" }}>
+                <h1 className="text-xl font-bold text-white" style={{ fontFamily: "Montserrat, sans-serif" }}>
                   {ROLES.find((r) => r.id === selectedRole)?.title}
                 </h1>
                 <span className="text-lg">{ROLES.find((r) => r.id === selectedRole)?.icon}</span>
@@ -409,7 +409,7 @@ export default function RegisterPage() {
 
         {/* Login link */}
         <div className="text-center mt-6">
-          <p className="text-sm text-[oklch(0.55_0.01_240)]">
+          <p className="text-sm text-[oklch(0.55_0.012_240)]">
             Уже есть аккаунт?{" "}
             <button
               onClick={() => navigate("/login")}

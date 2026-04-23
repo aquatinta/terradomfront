@@ -90,7 +90,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[oklch(0.10_0.008_240)] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[oklch(0.09_0.015_255)] flex items-center justify-center px-4">
       {/* Blueprint grid background */}
       <div
         className="fixed inset-0 opacity-[0.03] pointer-events-none"
@@ -120,13 +120,13 @@ export default function LoginPage() {
               Терра<span className="text-[oklch(0.769_0.188_70.08)]">дом</span>
             </span>
           </a>
-          <p className="text-sm text-[oklch(0.55_0.01_240)] mt-3">
+          <p className="text-sm text-[oklch(0.55_0.012_240)] mt-3">
             Войдите в личный кабинет
           </p>
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-[oklch(0.22_0.01_240)] bg-[oklch(0.13_0.008_240)] p-8 shadow-2xl">
+        <div className="rounded-2xl border border-[oklch(0.20_0.025_255)] bg-[oklch(0.13_0.008_240)] p-8 shadow-2xl">
           <h1
             className="text-xl font-bold text-white mb-6"
             style={{ fontFamily: "Manrope, sans-serif" }}
@@ -143,13 +143,13 @@ export default function LoginPage() {
               <div className="relative">
                 <Phone
                   size={16}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]"
                 />
                 <input
                   {...register("phone")}
                   type="tel"
                   placeholder="+7 (900) 000-00-00"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.25_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] focus:ring-1 focus:ring-[oklch(0.769_0.188_70.08/0.3)] transition-colors"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.25_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] focus:ring-1 focus:ring-[oklch(0.769_0.188_70.08/0.3)] transition-colors"
                 />
               </div>
               {errors.phone && (
@@ -165,18 +165,18 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock
                   size={16}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)]"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)]"
                 />
                 <input
                   {...register("password")}
                   type={showPassword ? "text" : "password"}
                   placeholder="Введите пароль"
-                  className="w-full pl-10 pr-12 py-3 rounded-xl bg-[oklch(0.16_0.01_240)] border border-[oklch(0.25_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] focus:ring-1 focus:ring-[oklch(0.769_0.188_70.08/0.3)] transition-colors"
+                  className="w-full pl-10 pr-12 py-3 rounded-xl bg-[oklch(0.13_0.018_255)] border border-[oklch(0.25_0.01_240)] text-white placeholder-[oklch(0.4_0.01_240)] text-sm focus:outline-none focus:border-[oklch(0.769_0.188_70.08/0.6)] focus:ring-1 focus:ring-[oklch(0.769_0.188_70.08/0.3)] transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.01_240)] hover:text-[oklch(0.65_0.01_240)] transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[oklch(0.45_0.012_240)] hover:text-[oklch(0.65_0.012_240)] transition-colors"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -204,8 +204,8 @@ export default function LoginPage() {
           </form>
 
           {/* Register link */}
-          <div className="mt-6 pt-6 border-t border-[oklch(0.22_0.01_240)] text-center">
-            <p className="text-sm text-[oklch(0.55_0.01_240)]">
+          <div className="mt-6 pt-6 border-t border-[oklch(0.20_0.025_255)] text-center">
+            <p className="text-sm text-[oklch(0.55_0.012_240)]">
               Ещё нет аккаунта?{" "}
               <button
                 onClick={() => navigate("/register")}
@@ -221,7 +221,7 @@ export default function LoginPage() {
         <div className="text-center mt-6">
           <a
             href="/"
-            className="text-sm text-[oklch(0.45_0.01_240)] hover:text-[oklch(0.65_0.01_240)] transition-colors"
+            className="text-sm text-[oklch(0.45_0.012_240)] hover:text-[oklch(0.65_0.012_240)] transition-colors"
           >
             ← Вернуться на главную
           </a>

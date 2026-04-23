@@ -55,7 +55,7 @@ export default function ContractorsSection() {
       id="contractors"
       ref={sectionRef}
       className="py-24 lg:py-32 relative overflow-hidden"
-      style={{ background: "oklch(0.12 0.008 240)" }}
+      style={{ background: "oklch(0.09 0.015 255)" }}
     >
       {/* Amber glow left */}
       <div
@@ -89,13 +89,13 @@ export default function ContractorsSection() {
                   boxShadow: "0 10px 30px oklch(0 0 0 / 0.4)",
                 }}
               >
-                <div className="text-xs text-[oklch(0.55_0.01_240)] mb-1" style={{ fontFamily: "Inter, sans-serif" }}>
+                <div className="text-xs text-[oklch(0.55_0.01_240)] mb-1" style={{ fontFamily: "Manrope, sans-serif" }}>
                   Комиссия платформы
                 </div>
                 <div className="text-2xl font-black text-[oklch(0.769_0.188_70.08)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                   5–10%
                 </div>
-                <div className="text-xs text-[oklch(0.55_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                <div className="text-xs text-[oklch(0.55_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                   от суммы контракта
                 </div>
               </div>
@@ -106,18 +106,18 @@ export default function ContractorsSection() {
           <div className="flex flex-col gap-6 order-1 lg:order-2">
             <div className="reveal">
               <div className="accent-line mb-4" />
-              <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Manrope, sans-serif" }}>
                 Для подрядчиков
               </p>
               <h2
                 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4"
-                style={{ fontFamily: "Manrope, sans-serif" }}
+                style={{ fontFamily: "Montserrat, sans-serif" }}
               >
                 Стабильный поток
                 <br />
                 <span className="text-amber-glow">заказов</span> без рисков
               </h2>
-              <p className="text-[oklch(0.60_0.01_240)] text-base leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-[oklch(0.60_0.01_240)] text-base leading-relaxed" style={{ fontFamily: "Manrope, sans-serif" }}>
                 Присоединяйтесь к бирже верифицированных подрядчиков Террадом.
                 Получайте заказы от заказчиков с уже одобренным финансированием
                 и работайте по прозрачным правилам.
@@ -146,7 +146,7 @@ export default function ContractorsSection() {
                     >
                       {benefit.title}
                     </h4>
-                    <p className="text-xs text-[oklch(0.55_0.01_240)] leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
+                    <p className="text-xs text-[oklch(0.55_0.01_240)] leading-relaxed" style={{ fontFamily: "Manrope, sans-serif" }}>
                       {benefit.description}
                     </p>
                   </div>
@@ -173,7 +173,7 @@ export default function ContractorsSection() {
 
             {/* Onboarding steps */}
             <div className="reveal">
-              <p className="text-xs text-[oklch(0.45_0.01_240)] mb-3" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-xs text-[oklch(0.45_0.01_240)] mb-3" style={{ fontFamily: "Manrope, sans-serif" }}>
                 Онбординг за 3 шага:
               </p>
               <div className="flex items-center gap-3 flex-wrap">
@@ -189,7 +189,7 @@ export default function ContractorsSection() {
                     >
                       {i + 1}
                     </div>
-                    <span className="text-xs text-[oklch(0.60_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                    <span className="text-xs text-[oklch(0.60_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                       {step}
                     </span>
                     {i < 2 && <div className="w-4 h-px bg-[oklch(0.30_0.01_240)]" />}

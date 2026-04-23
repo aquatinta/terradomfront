@@ -28,7 +28,7 @@ export default function PartnerCtaSection() {
     <section
       ref={sectionRef}
       className="py-20 lg:py-28 relative overflow-hidden"
-      style={{ background: "oklch(0.14 0.01 240)" }}
+      style={{ background: "oklch(0.11 0.018 255)" }}
     >
       {/* Amber glow center */}
       <div
@@ -43,12 +43,12 @@ export default function PartnerCtaSection() {
         <div className="text-center mb-10 reveal">
           <h2
             className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3"
-            style={{ fontFamily: "Manrope, sans-serif" }}
+            style={{ fontFamily: "Montserrat, sans-serif" }}
           >
             Готовы начать работу
             <span className="text-amber-glow"> на платформе?</span>
           </h2>
-          <p className="text-[oklch(0.55_0.01_240)] text-base" style={{ fontFamily: "Inter, sans-serif" }}>
+          <p className="text-[oklch(0.55_0.01_240)] text-base" style={{ fontFamily: "Manrope, sans-serif" }}>
             Выберите вашу роль и зарегистрируйтесь в личном кабинете
           </p>
         </div>
@@ -75,13 +75,13 @@ export default function PartnerCtaSection() {
             >
               Я подрядчик
             </h3>
-            <p className="text-sm text-[oklch(0.55_0.01_240)] mb-5 leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
+            <p className="text-sm text-[oklch(0.55_0.01_240)] mb-5 leading-relaxed" style={{ fontFamily: "Manrope, sans-serif" }}>
               Строительная компания или бригада. Хочу получать заказы от заказчиков
               с готовыми проектами и защищёнными платежами.
             </p>
             <ul className="flex flex-col gap-2 mb-6">
               {["Участие в тендерах", "Гарантированная оплата", "Цифровые акты"].map((item) => (
-                <li key={item} className="flex items-center gap-2 text-xs text-[oklch(0.65_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                <li key={item} className="flex items-center gap-2 text-xs text-[oklch(0.65_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                   <div className="w-1.5 h-1.5 rounded-full bg-[oklch(0.769_0.188_70.08)]" />
                   {item}
                 </li>
@@ -117,13 +117,13 @@ export default function PartnerCtaSection() {
             >
               Я поставщик
             </h3>
-            <p className="text-sm text-[oklch(0.55_0.01_240)] mb-5 leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
+            <p className="text-sm text-[oklch(0.55_0.01_240)] mb-5 leading-relaxed" style={{ fontFamily: "Manrope, sans-serif" }}>
               Завод или дилер стройматериалов. Хочу разместить каталог и получать
               прямые заказы от заказчиков по всей России.
             </p>
             <ul className="flex flex-col gap-2 mb-6">
               {["Размещение каталога", "Прямые заказы", "Аналитика спроса"].map((item) => (
-                <li key={item} className="flex items-center gap-2 text-xs text-[oklch(0.65_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                <li key={item} className="flex items-center gap-2 text-xs text-[oklch(0.65_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                   <div className="w-1.5 h-1.5 rounded-full bg-[oklch(0.769_0.188_70.08)]" />
                   {item}
                 </li>

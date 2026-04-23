@@ -61,7 +61,7 @@ export default function SuppliersSection() {
       id="suppliers"
       ref={sectionRef}
       className="py-24 lg:py-32 relative overflow-hidden"
-      style={{ background: "oklch(0.14 0.01 240)" }}
+      style={{ background: "oklch(0.11 0.018 255)" }}
     >
       {/* Blueprint grid */}
       <div
@@ -90,18 +90,18 @@ export default function SuppliersSection() {
           <div className="flex flex-col gap-6">
             <div className="reveal">
               <div className="accent-line mb-4" />
-              <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Manrope, sans-serif" }}>
                 Для поставщиков
               </p>
               <h2
                 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4"
-                style={{ fontFamily: "Manrope, sans-serif" }}
+                style={{ fontFamily: "Montserrat, sans-serif" }}
               >
                 Разместите каталог —
                 <br />
                 получайте <span className="text-amber-glow">заказы</span>
               </h2>
-              <p className="text-[oklch(0.60_0.01_240)] text-base leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-[oklch(0.60_0.01_240)] text-base leading-relaxed" style={{ fontFamily: "Manrope, sans-serif" }}>
                 Заводы и дилеры стройматериалов размещают каталог на Террадом
                 и получают прямые заказы от заказчиков. Ваши цены автоматически
                 включаются в сметы — без посредников.
@@ -130,7 +130,7 @@ export default function SuppliersSection() {
                     >
                       {benefit.title}
                     </h4>
-                    <p className="text-xs text-[oklch(0.55_0.01_240)] leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
+                    <p className="text-xs text-[oklch(0.55_0.01_240)] leading-relaxed" style={{ fontFamily: "Manrope, sans-serif" }}>
                       {benefit.description}
                     </p>
                   </div>
@@ -182,7 +182,7 @@ export default function SuppliersSection() {
                     >
                       {stat.value}
                     </div>
-                    <div className="text-xs text-[oklch(0.50_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                    <div className="text-xs text-[oklch(0.50_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                       {stat.label}
                     </div>
                   </div>
@@ -190,9 +190,9 @@ export default function SuppliersSection() {
               </div>
               <div
                 className="h-px w-full mb-4"
-                style={{ background: "oklch(0.28 0.01 240)" }}
+                style={{ background: "oklch(0.24 0.03 255)" }}
               />
-              <p className="text-xs text-[oklch(0.50_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+              <p className="text-xs text-[oklch(0.50_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                 Комиссия взимается только с успешных сделок. Нет продаж — нет платежей.
               </p>
             </div>
@@ -214,7 +214,7 @@ export default function SuppliersSection() {
                       background: "oklch(0.769 0.188 70.08 / 0.1)",
                       color: "oklch(0.769 0.188 70.08)",
                       border: "1px solid oklch(0.769 0.188 70.08 / 0.2)",
-                      fontFamily: "Inter, sans-serif",
+                      fontFamily: "Manrope, sans-serif",
                     }}
                   >
                     {tech}
@@ -238,14 +238,14 @@ export default function SuppliersSection() {
               ].map((item) => (
                 <div key={item.region} className="mb-3 last:mb-0">
                   <div className="flex justify-between mb-1">
-                    <span className="text-xs text-[oklch(0.65_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                    <span className="text-xs text-[oklch(0.65_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                       {item.region}
                     </span>
                     <span className="text-xs font-semibold text-[oklch(0.769_0.188_70.08)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                       {item.count} заявок
                     </span>
                   </div>
-                  <div className="h-1.5 rounded-full" style={{ background: "oklch(0.22 0.01 240)" }}>
+                  <div className="h-1.5 rounded-full" style={{ background: "oklch(0.17 0.02 255)" }}>
                     <div
                       className="h-full rounded-full"
                       style={{

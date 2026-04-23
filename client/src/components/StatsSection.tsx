@@ -49,7 +49,7 @@ function StatItem({ stat, active }: { stat: typeof stats[0]; active: boolean }) 
       </div>
       <div
         className="text-xs text-[oklch(0.50_0.01_240)] max-w-[180px]"
-        style={{ fontFamily: "Inter, sans-serif" }}
+        style={{ fontFamily: "Manrope, sans-serif" }}
       >
         {stat.description}
       </div>
@@ -82,7 +82,7 @@ export default function StatsSection() {
       ref={sectionRef}
       className="py-16 lg:py-20 relative overflow-hidden reveal"
       style={{
-        background: "linear-gradient(135deg, oklch(0.14 0.015 240) 0%, oklch(0.10 0.01 240) 100%)",
+        background: "linear-gradient(105deg, oklch(0.16 0.06 255) 0%, oklch(0.11 0.025 255) 40%, oklch(0.09 0.015 255) 100%)",
         borderTop: "1px solid oklch(0.769 0.188 70.08 / 0.15)",
         borderBottom: "1px solid oklch(0.769 0.188 70.08 / 0.15)",
       }}

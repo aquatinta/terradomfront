@@ -60,7 +60,7 @@ export default function HowItWorksSection() {
       id="how-it-works"
       ref={sectionRef}
       className="py-24 lg:py-32 relative overflow-hidden"
-      style={{ background: "oklch(0.14 0.01 240)" }}
+      style={{ background: "oklch(0.10 0.018 255)" }}
     >
       {/* Subtle grid */}
       <div
@@ -78,16 +78,16 @@ export default function HowItWorksSection() {
         {/* Header */}
         <div className="text-center mb-16 lg:mb-20 reveal">
           <div className="accent-line mx-auto mb-4" />
-          <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Inter, sans-serif" }}>
+          <p className="text-[oklch(0.769_0.188_70.08)] text-sm font-semibold uppercase tracking-widest mb-3" style={{ fontFamily: "Manrope, sans-serif" }}>
             Для заказчика
           </p>
           <h2
             className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4"
-            style={{ fontFamily: "Manrope, sans-serif" }}
+            style={{ fontFamily: "Montserrat, sans-serif" }}
           >
             Как это работает
           </h2>
-          <p className="text-[oklch(0.60_0.01_240)] text-base lg:text-lg max-w-2xl mx-auto" style={{ fontFamily: "Inter, sans-serif" }}>
+          <p className="text-[oklch(0.60_0.01_240)] text-base lg:text-lg max-w-2xl mx-auto" style={{ fontFamily: "Manrope, sans-serif" }}>
             Три шага от идеи до готового дома. Весь процесс — в одном приложении.
           </p>
         </div>
@@ -115,17 +115,17 @@ export default function HowItWorksSection() {
 
                 {/* Content */}
                 <div className="mb-2">
-                  <span className="text-xs text-[oklch(0.769_0.188_70.08)] font-semibold uppercase tracking-wider" style={{ fontFamily: "Inter, sans-serif" }}>
+                  <span className="text-xs text-[oklch(0.769_0.188_70.08)] font-semibold uppercase tracking-wider" style={{ fontFamily: "Manrope, sans-serif" }}>
                     {step.subtitle}
                   </span>
                 </div>
                 <h3
                   className="text-xl lg:text-2xl font-bold text-white mb-3"
-                  style={{ fontFamily: "Manrope, sans-serif" }}
+                  style={{ fontFamily: "Montserrat, sans-serif" }}
                 >
                   {step.title}
                 </h3>
-                <p className="text-[oklch(0.60_0.01_240)] text-sm leading-relaxed mb-5" style={{ fontFamily: "Inter, sans-serif" }}>
+                <p className="text-[oklch(0.60_0.01_240)] text-sm leading-relaxed mb-5" style={{ fontFamily: "Manrope, sans-serif" }}>
                   {step.description}
                 </p>
 
@@ -139,7 +139,7 @@ export default function HowItWorksSection() {
                       >
                         <div className="w-1.5 h-1.5 rounded-full bg-[oklch(0.769_0.188_70.08)]" />
                       </div>
-                      <span className="text-xs text-[oklch(0.70_0.01_240)]" style={{ fontFamily: "Inter, sans-serif" }}>
+                      <span className="text-xs text-[oklch(0.70_0.01_240)]" style={{ fontFamily: "Manrope, sans-serif" }}>
                         {feature}
                       </span>
                     </li>
