@@ -237,5 +237,18 @@ export default defineConfig({
       strict: true,
       deny: ["**/.*"],
     },
+    // ---------------------------------------------------------------------------
+    // Dev proxy: /api/* → Elixir backend на localhost:4000
+    // Активен только в dev-режиме (когда VITE_API_URL не задан).
+    // В prod VITE_API_URL указывает на реальный бэкенд — прокси не нужны.
+    // ---------------------------------------------------------------------------
+    proxy: {
+      "/api": {
+        target: "http://localhost:4000",
+        changeOrigin: true,
+        // Путь не переписываем: /api/... остаётся /api/...
+        rewrite: (p: string) => p,
+      },
+    },
   },
 });

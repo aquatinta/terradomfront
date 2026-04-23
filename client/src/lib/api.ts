@@ -68,6 +68,11 @@ import type {
 // Axios instance
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// API base URL strategy:
+//   DEV:  VITE_API_URL не задан → baseURL = "/api" → Vite proxy перенаправляет на localhost:4000
+//   PROD: VITE_API_URL = "https://api.terradom.ru" → axios идёт напрямую
+// ---------------------------------------------------------------------------
 const BASE_URL = import.meta.env.VITE_API_URL ?? "/api";
 
 const axiosInstance: AxiosInstance = axios.create({
