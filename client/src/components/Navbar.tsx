@@ -5,6 +5,7 @@
    Mobile-responsive with hamburger menu. */
 
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import { Menu, X, LogOut, User, ChevronDown, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -28,6 +29,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const [, navigate] = useLocation();
 
   const { isAuthenticated, isInitializing, user, logout } = useAuth();
 
@@ -65,8 +67,8 @@ export default function Navbar() {
         return;
       }
     }
-    // Otherwise navigate
-    window.location.href = href;
+    // Otherwise use wouter navigate
+    navigate(href);
   };
 
   const handleLogout = async () => {
@@ -74,15 +76,15 @@ export default function Navbar() {
     setMobileOpen(false);
     await logout();
     toast.success("Вы вышли из системы");
+    navigate("/");
   };
 
   const handleDashboard = () => {
     setUserMenuOpen(false);
+    setMobileOpen(false);
     const role = user?.role ?? "customer";
     const path = ROLE_DASHBOARD[role] ?? "/dashboard";
-    toast.info("Кабинет — в разработке", {
-      description: `Маршрут: ${path}`,
-    });
+    navigate(path);
   };
 
   // User initials for avatar
@@ -152,7 +154,7 @@ export default function Navbar() {
                   Личный кабинет
                 </button>
                 <button
-                  onClick={() => { setUserMenuOpen(false); toast.info("Профиль — в разработке"); }}
+                  onClick={() => { setUserMenuOpen(false); toast.info("Профиль — в разработке (Этап 2)"); }}
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[oklch(0.85_0.005_240)] hover:bg-[oklch(0.22_0.01_240)] hover:text-white transition-colors"
                 >
                   <User size={15} className="text-[oklch(0.6_0.01_240)]" />
@@ -177,18 +179,12 @@ export default function Navbar() {
 
     // Not authenticated
     return (
-      <a
-        href="/login"
-        onClick={(e) => {
-          e.preventDefault();
-          toast.info("Страница входа — в разработке", {
-            description: "Реализуется в Этапе 2 (AuthContext + LoginPage)",
-          });
-        }}
+      <button
+        onClick={() => navigate("/login")}
         className="btn-amber-outline px-4 py-2 rounded-md text-sm"
       >
         Войти в кабинет
-      </a>
+      </button>
     );
   };
 
@@ -298,17 +294,12 @@ export default function Navbar() {
                   </button>
                 </>
               ) : (
-                <a
-                  href="/login"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setMobileOpen(false);
-                    toast.info("Страница входа — в разработке");
-                  }}
+                <button
+                  onClick={() => { setMobileOpen(false); navigate("/login"); }}
                   className="btn-amber-outline px-4 py-2.5 rounded-md text-sm text-center"
                 >
                   Войти в кабинет
-                </a>
+                </button>
               )}
 
               <a

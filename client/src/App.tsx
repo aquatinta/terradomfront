@@ -9,6 +9,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute, CustomerRoute, PartnerRoute, AdminRoute } from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import PartnerDashboard from "./pages/PartnerDashboard";
 import AdminPanel from "./pages/AdminPanel";
@@ -19,6 +20,7 @@ function Router() {
       {/* Public routes */}
       <Route path="/" component={Home} />
       <Route path="/login" component={LoginPage} />
+      <Route path="/register" component={RegisterPage} />
 
       {/* Customer cabinet (B2C) */}
       <Route path="/dashboard">

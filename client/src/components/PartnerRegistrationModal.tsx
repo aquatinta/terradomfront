@@ -10,6 +10,7 @@ import { z } from "zod";
 import { X, HardHat, Package, ChevronRight, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { api, normalizePhone } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 /* ─── Types ─────────────────────────────────────────────────────────────── */
 
@@ -187,6 +188,7 @@ export default function PartnerRegistrationModal({
   const [step, setStep] = useState<"form" | "success">("form");
   const [submitting, setSubmitting] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const { refreshUser } = useAuth();
 
   const {
     register,
@@ -246,6 +248,12 @@ export default function PartnerRegistrationModal({
     setSubmitting(true);
     try {
       await submitPartnerRegistration(data);
+      // Refresh auth state so Navbar shows the new user's avatar immediately
+      try {
+        await refreshUser();
+      } catch {
+        // refreshUser failure is non-critical — registration already succeeded
+      }
       setStep("success");
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Неизвестная ошибка";

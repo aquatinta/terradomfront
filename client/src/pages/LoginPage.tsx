@@ -208,7 +208,7 @@ export default function LoginPage() {
             <p className="text-sm text-[oklch(0.55_0.01_240)]">
               Ещё нет аккаунта?{" "}
               <button
-                onClick={() => toast.info("Регистрация партнёра — используйте форму на главной странице")}
+                onClick={() => navigate("/register")}
                 className="text-[oklch(0.769_0.188_70.08)] hover:text-[oklch(0.85_0.18_70.08)] font-medium transition-colors"
               >
                 Зарегистрироваться
