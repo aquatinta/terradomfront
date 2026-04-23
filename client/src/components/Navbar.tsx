@@ -1,18 +1,51 @@
 /* Navbar — Terradom Dark Tech PropTech
    Sticky top navigation with logo, links, CTA button
-   Mobile-responsive with hamburger menu */
+   Auth-aware: shows user avatar + role badge when authenticated,
+   "Войти в кабинет" button when not.
+   Mobile-responsive with hamburger menu. */
 
-import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Menu, X, LogOut, User, ChevronDown, LayoutDashboard } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+
+const ROLE_LABELS: Record<string, string> = {
+  customer: "Заказчик",
+  partner: "Подрядчик",
+  supplier: "Поставщик",
+  admin: "Администратор",
+};
+
+const ROLE_DASHBOARD: Record<string, string> = {
+  customer: "/dashboard",
+  partner: "/partner",
+  supplier: "/partner",
+  admin: "/admin",
+};
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  const { isAuthenticated, isInitializing, user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close user menu on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   const navLinks = [
@@ -24,8 +57,139 @@ export default function Navbar() {
 
   const scrollTo = (href: string) => {
     setMobileOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    // If it's a hash link, smooth scroll
+    if (href.startsWith("#")) {
+      const el = document.querySelector(href);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+    }
+    // Otherwise navigate
+    window.location.href = href;
+  };
+
+  const handleLogout = async () => {
+    setUserMenuOpen(false);
+    setMobileOpen(false);
+    await logout();
+    toast.success("Вы вышли из системы");
+  };
+
+  const handleDashboard = () => {
+    setUserMenuOpen(false);
+    const role = user?.role ?? "customer";
+    const path = ROLE_DASHBOARD[role] ?? "/dashboard";
+    toast.info("Кабинет — в разработке", {
+      description: `Маршрут: ${path}`,
+    });
+  };
+
+  // User initials for avatar
+  const initials = user
+    ? `${user.firstName?.charAt(0) ?? ""}${user.lastName?.charAt(0) ?? ""}`.toUpperCase() ||
+      user.phone.slice(-2)
+    : "";
+
+  const roleLabel = user ? (ROLE_LABELS[user.role] ?? user.role) : "";
+
+  // ---------------------------------------------------------------------------
+  // Auth CTA block (desktop)
+  // ---------------------------------------------------------------------------
+
+  const AuthBlock = () => {
+    if (isInitializing) {
+      return (
+        <div className="w-8 h-8 rounded-full bg-[oklch(0.22_0.01_240)] animate-pulse" />
+      );
+    }
+
+    if (isAuthenticated && user) {
+      return (
+        <div className="relative" ref={userMenuRef}>
+          <button
+            onClick={() => setUserMenuOpen((v) => !v)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[oklch(0.3_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors group"
+          >
+            {/* Avatar */}
+            <div className="w-7 h-7 rounded-full bg-[oklch(0.769_0.188_70.08)] flex items-center justify-center text-xs font-bold text-[oklch(0.1_0.01_70)]">
+              {initials}
+            </div>
+            <div className="text-left hidden lg:block">
+              <p className="text-xs font-medium text-white leading-tight">
+                {user.firstName ?? user.phone}
+              </p>
+              <p className="text-[10px] text-[oklch(0.769_0.188_70.08)] leading-tight">
+                {roleLabel}
+              </p>
+            </div>
+            <ChevronDown
+              size={14}
+              className={`text-[oklch(0.6_0.01_240)] transition-transform duration-200 ${
+                userMenuOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {/* Dropdown menu */}
+          {userMenuOpen && (
+            <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-[oklch(0.28_0.01_240)] bg-[oklch(0.14_0.01_240/0.98)] backdrop-blur-xl shadow-2xl overflow-hidden z-50">
+              {/* User info header */}
+              <div className="px-4 py-3 border-b border-[oklch(0.22_0.01_240)]">
+                <p className="text-sm font-semibold text-white truncate">
+                  {user.companyName ?? (`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.phone)}
+                </p>
+                <p className="text-xs text-[oklch(0.769_0.188_70.08)] mt-0.5">{roleLabel}</p>
+              </div>
+
+              {/* Menu items */}
+              <div className="py-1">
+                <button
+                  onClick={handleDashboard}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[oklch(0.85_0.005_240)] hover:bg-[oklch(0.22_0.01_240)] hover:text-white transition-colors"
+                >
+                  <LayoutDashboard size={15} className="text-[oklch(0.769_0.188_70.08)]" />
+                  Личный кабинет
+                </button>
+                <button
+                  onClick={() => { setUserMenuOpen(false); toast.info("Профиль — в разработке"); }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[oklch(0.85_0.005_240)] hover:bg-[oklch(0.22_0.01_240)] hover:text-white transition-colors"
+                >
+                  <User size={15} className="text-[oklch(0.6_0.01_240)]" />
+                  Профиль
+                </button>
+              </div>
+
+              <div className="border-t border-[oklch(0.22_0.01_240)] py-1">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-[oklch(0.22_0.01_240)] hover:text-red-300 transition-colors"
+                >
+                  <LogOut size={15} />
+                  Выйти
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // Not authenticated
+    return (
+      <a
+        href="/login"
+        onClick={(e) => {
+          e.preventDefault();
+          toast.info("Страница входа — в разработке", {
+            description: "Реализуется в Этапе 2 (AuthContext + LoginPage)",
+          });
+        }}
+        className="btn-amber-outline px-4 py-2 rounded-md text-sm"
+      >
+        Войти в кабинет
+      </a>
+    );
   };
 
   return (
@@ -66,15 +230,9 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA */}
+        {/* CTA — desktop */}
         <div className="hidden md:flex items-center gap-3">
-          <a
-            href="#partners"
-            onClick={(e) => { e.preventDefault(); scrollTo("#contractors"); }}
-            className="btn-amber-outline px-4 py-2 rounded-md text-sm"
-          >
-            Войти в кабинет
-          </a>
+          <AuthBlock />
           <a
             href="#download"
             onClick={(e) => { e.preventDefault(); scrollTo("#download"); }}
@@ -107,14 +265,52 @@ export default function Navbar() {
                 {link.label}
               </button>
             ))}
+
+            {/* Auth block mobile */}
             <div className="flex flex-col gap-3 mt-2">
-              <a
-                href="#"
-                onClick={(e) => { e.preventDefault(); scrollTo("#contractors"); setMobileOpen(false); }}
-                className="btn-amber-outline px-4 py-2.5 rounded-md text-sm text-center"
-              >
-                Войти в кабинет
-              </a>
+              {isAuthenticated && user ? (
+                <>
+                  {/* User info */}
+                  <div className="flex items-center gap-3 px-1 py-2 border-b border-[oklch(0.22_0.01_240)]">
+                    <div className="w-9 h-9 rounded-full bg-[oklch(0.769_0.188_70.08)] flex items-center justify-center text-sm font-bold text-[oklch(0.1_0.01_70)]">
+                      {initials}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">
+                        {user.firstName ?? user.phone}
+                      </p>
+                      <p className="text-xs text-[oklch(0.769_0.188_70.08)]">{roleLabel}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleDashboard}
+                    className="btn-amber-outline px-4 py-2.5 rounded-md text-sm text-center flex items-center justify-center gap-2"
+                  >
+                    <LayoutDashboard size={15} />
+                    Личный кабинет
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-sm text-red-400 border border-red-400/30 hover:bg-red-400/10 transition-colors"
+                  >
+                    <LogOut size={15} />
+                    Выйти
+                  </button>
+                </>
+              ) : (
+                <a
+                  href="/login"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setMobileOpen(false);
+                    toast.info("Страница входа — в разработке");
+                  }}
+                  className="btn-amber-outline px-4 py-2.5 rounded-md text-sm text-center"
+                >
+                  Войти в кабинет
+                </a>
+              )}
+
               <a
                 href="#download"
                 onClick={(e) => { e.preventDefault(); scrollTo("#download"); setMobileOpen(false); }}
