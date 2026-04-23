@@ -246,8 +246,7 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:4000",
         changeOrigin: true,
-        // Путь не переписываем: /api/... остаётся /api/...
-        rewrite: (p: string) => p,
+        secure: false,
       },
     },
   },
