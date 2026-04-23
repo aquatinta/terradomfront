@@ -6,13 +6,58 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { PartnerModalProvider } from "./contexts/PartnerModalContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute, CustomerRoute, PartnerRoute, AdminRoute } from "./components/ProtectedRoute";
 import Home from "./pages/Home";
+import LoginPage from "./pages/LoginPage";
+import CustomerDashboard from "./pages/CustomerDashboard";
+import PartnerDashboard from "./pages/PartnerDashboard";
+import AdminPanel from "./pages/AdminPanel";
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
+      {/* Public routes */}
+      <Route path="/" component={Home} />
+      <Route path="/login" component={LoginPage} />
+
+      {/* Customer cabinet (B2C) */}
+      <Route path="/dashboard">
+        <CustomerRoute>
+          <CustomerDashboard />
+        </CustomerRoute>
+      </Route>
+      <Route path="/dashboard/:rest*">
+        <CustomerRoute>
+          <CustomerDashboard />
+        </CustomerRoute>
+      </Route>
+
+      {/* Partner / Supplier cabinet (B2B) */}
+      <Route path="/partner">
+        <PartnerRoute>
+          <PartnerDashboard />
+        </PartnerRoute>
+      </Route>
+      <Route path="/partner/:rest*">
+        <PartnerRoute>
+          <PartnerDashboard />
+        </PartnerRoute>
+      </Route>
+
+      {/* Admin panel */}
+      <Route path="/admin">
+        <AdminRoute>
+          <AdminPanel />
+        </AdminRoute>
+      </Route>
+      <Route path="/admin/:rest*">
+        <AdminRoute>
+          <AdminPanel />
+        </AdminRoute>
+      </Route>
+
+      {/* 404 */}
+      <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   );
