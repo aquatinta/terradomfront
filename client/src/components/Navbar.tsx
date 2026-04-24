@@ -7,8 +7,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { Menu, X, LogOut, User, ChevronDown, LayoutDashboard, Bell } from "lucide-react";
+import { Menu, X, LogOut, User, ChevronDown, LayoutDashboard, Bell, ShoppingCart, Store } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import { toast } from "sonner";
 
@@ -53,6 +54,8 @@ export default function Navbar() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  const { cart } = useCart();
 
   const navLinks = [
     { label: "Как это работает", href: "#how-it-works" },
@@ -261,10 +264,30 @@ export default function Navbar() {
               {link.label}
             </button>
           ))}
+          <button
+            onClick={() => navigate("/marketplace")}
+            className="flex items-center gap-1.5 nav-link text-sm text-[oklch(0.769_0.188_70.08)] hover:text-[oklch(0.85_0.18_70.08)] transition-colors font-semibold"
+          >
+            <Store size={15} />
+            Маркет
+          </button>
         </div>
 
         {/* CTA — desktop */}
         <div className="hidden md:flex items-center gap-3">
+          {/* Cart icon */}
+          <button
+            onClick={() => navigate("/cart")}
+            className="relative flex items-center justify-center w-9 h-9 rounded-lg border border-[oklch(0.3_0.01_240)] hover:border-[oklch(0.769_0.188_70.08/0.6)] transition-colors"
+            title="Корзина"
+          >
+            <ShoppingCart size={16} className="text-[oklch(0.75_0.01_240)]" />
+            {cart.itemCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)] text-[10px] font-bold flex items-center justify-center leading-none">
+                {cart.itemCount > 9 ? "9+" : cart.itemCount}
+              </span>
+            )}
+          </button>
           <AuthBlock />
           <a
             href="#download"

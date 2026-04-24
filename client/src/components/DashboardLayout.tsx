@@ -21,6 +21,8 @@ import {
   X,
   ChevronRight,
   Bell,
+  Store,
+  ShoppingBag,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -43,6 +45,8 @@ const CUSTOMER_NAV: NavItem[] = [
   { label: "Мои проекты", href: "/dashboard/projects", icon: <FolderOpen size={18} />, comingSoon: true },
   { label: "Предложения", href: "/dashboard/offers", icon: <FileText size={18} />, comingSoon: true },
   { label: "Сделки", href: "/dashboard/deals", icon: <Handshake size={18} />, comingSoon: true },
+  { label: "Маркетплейс", href: "/marketplace", icon: <Store size={18} /> },
+  { label: "Мои заказы", href: "/orders", icon: <ShoppingBag size={18} /> },
   { label: "Настройки", href: "/dashboard/settings", icon: <Settings size={18} />, comingSoon: true },
 ];
 
@@ -51,6 +55,8 @@ const PARTNER_NAV: NavItem[] = [
   { label: "Тендеры", href: "/partner/tenders", icon: <Package size={18} />, comingSoon: true },
   { label: "Мои предложения", href: "/partner/offers", icon: <FileText size={18} />, comingSoon: true },
   { label: "Сделки", href: "/partner/deals", icon: <Handshake size={18} />, comingSoon: true },
+  { label: "Маркетплейс", href: "/marketplace", icon: <Store size={18} /> },
+  { label: "Кабинет поставщика", href: "/supplier", icon: <ShoppingBag size={18} /> },
   { label: "Настройки", href: "/partner/settings", icon: <Settings size={18} />, comingSoon: true },
 ];
 
