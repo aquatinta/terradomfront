@@ -65,9 +65,9 @@ export default function CheckoutPage() {
     setPlacing(true);
     try {
       const order = await marketplaceApi.orders.create({
+        idempotency_key: crypto.randomUUID(),
         items: cart.items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
-        deliveryAddress: address,
-        paymentMethod: payment,
+        delivery_address: address,
         comment,
       });
       await clearCart();
@@ -374,12 +374,12 @@ export default function CheckoutPage() {
             </h3>
             <div className="space-y-3 mb-4">
               {cart.items.map((item) => {
-                const img = item.product.images.find((i) => i.isPrimary) ?? item.product.images[0];
+                const img = item.product.images.find((i) => i) ?? item.product.images[0];
                 return (
                   <div key={item.id} className="flex gap-3">
                     <div className="w-12 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                       {img ? (
-                        <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
+                        <img src={img} alt={"image"} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
                           <Package size={16} className="text-gray-300" />

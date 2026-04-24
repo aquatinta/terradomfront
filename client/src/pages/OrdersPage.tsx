@@ -94,7 +94,7 @@ function OrderCard({ order }: { order: Order }) {
               <StatusBadge status={order.status} />
             </div>
             <div className="text-xs text-gray-500 mt-0.5">
-              {formatDate(order.createdAt)} · {order.items.length} поз. · {formatPrice(order.total)}
+              {formatDate(order.insertedAt)} · {order.items.length} поз. · {formatPrice(order.totalAmount)}
             </div>
           </div>
         </div>
@@ -124,8 +124,8 @@ function OrderCard({ order }: { order: Order }) {
               {order.items.map((item) => (
                 <div key={item.id} className="flex items-center gap-3">
                   <div className="w-12 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                    {item.productImage ? (
-                      <img src={item.productImage} alt={item.productName} className="w-full h-full object-cover" />
+                    {item.productSnapshot?.images?.[0] ?? "" ? (
+                      <img src={item.productSnapshot?.images?.[0] ?? "" ?? ""} alt={item.productSnapshot?.name ?? "Товар"} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <Package size={16} className="text-gray-300" />
@@ -133,10 +133,10 @@ function OrderCard({ order }: { order: Order }) {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{item.productName}</p>
-                    <p className="text-xs text-gray-500">{item.supplierName} · {item.quantity} {item.unit}</p>
+                    <p className="text-sm font-medium text-gray-900 truncate">{item.productSnapshot?.name ?? "Товар"}</p>
+                    <p className="text-xs text-gray-500">{"Поставщик"} · {item.quantity} {item.productSnapshot?.unit ?? "шт"}</p>
                   </div>
-                  <span className="text-sm font-semibold text-gray-900 flex-shrink-0">{formatPrice(item.subtotal)}</span>
+                  <span className="text-sm font-semibold text-gray-900 flex-shrink-0">{formatPrice(item.totalPrice)}</span>
                 </div>
               ))}
             </div>
@@ -158,7 +158,7 @@ function OrderCard({ order }: { order: Order }) {
               <p className="text-sm text-gray-700">
                 {order.paymentMethod === "card" ? "Банковская карта" : order.paymentMethod === "escrow" ? "Эскроу" : "Счёт"}
               </p>
-              <StatusBadge status={order.paymentStatus} />
+              <StatusBadge status={order.paymentStatus ?? "pending"} />
             </div>
             {order.trackingNumber && (
               <div>
@@ -173,9 +173,9 @@ function OrderCard({ order }: { order: Order }) {
           {/* Total */}
           <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: "#F3F4F6" }}>
             <div className="text-sm text-gray-500">
-              Товары {formatPrice(order.subtotal)} + доставка {formatPrice(order.deliveryCost)}
+              Товары {formatPrice(order.totalAmount)} + доставка {formatPrice(0)}
             </div>
-            <div className="font-black text-lg text-gray-900">{formatPrice(order.total)}</div>
+            <div className="font-black text-lg text-gray-900">{formatPrice(order.totalAmount)}</div>
           </div>
 
           {/* Actions */}
@@ -291,7 +291,7 @@ export default function OrdersPage() {
             { label: "Всего заказов", value: orders.length, icon: <Package size={20} className="text-blue-600" /> },
             { label: "Доставлено", value: orders.filter((o) => o.status === "delivered").length, icon: <CheckCircle2 size={20} className="text-green-600" /> },
             { label: "В обработке", value: orders.filter((o) => ["pending","confirmed","processing","shipped"].includes(o.status)).length, icon: <Clock size={20} className="text-amber-600" /> },
-            { label: "Потрачено", value: formatPrice(orders.reduce((s, o) => s + o.total, 0)), icon: <CreditCard size={20} className="text-purple-600" /> },
+            { label: "Потрачено", value: formatPrice(orders.reduce((s, o) => s + o.totalAmount, 0)), icon: <CreditCard size={20} className="text-purple-600" /> },
           ].map((stat) => (
             <LightCard key={stat.label} padding="p-4" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "#F8FAFC" }}>

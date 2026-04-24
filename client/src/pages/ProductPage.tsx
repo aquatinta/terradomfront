@@ -64,12 +64,12 @@ export default function ProductPage() {
     setLoading(true);
     Promise.all([
       marketplaceApi.products.get(id),
-      marketplaceApi.products.reviews(id),
+      marketplaceApi.reviews.list(id),
     ])
       .then(([p, r]) => {
         setProduct(p);
         setReviews(r);
-        setQuantity(p.minOrder);
+        setQuantity(p.minOrder ?? 1);
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -108,15 +108,15 @@ export default function ProductPage() {
     );
   }
 
-  const primaryImage = product.images.find((i) => i.isPrimary) ?? product.images[0];
-  const displayImage = product.images[activeImage] ?? primaryImage;
+  const primaryImage: string | null = product.images?.[0] ?? null;
+  const displayImage: string | null = (product.images[activeImage] as string | undefined) ?? primaryImage ?? null;
   const discount = product.priceOld ? Math.round((1 - product.price / product.priceOld) * 100) : 0;
 
   return (
     <MarketplaceLayout
       breadcrumbs={[
         { label: "Каталог", href: "/marketplace" },
-        { label: product.categoryName, href: `/marketplace?category=${product.categorySlug}` },
+        { label: product.categoryName ?? "Каталог", href: `/marketplace?category=${product.categorySlug ?? ""}` },
         { label: product.name },
       ]}
     >
@@ -127,8 +127,8 @@ export default function ProductPage() {
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 group">
             {displayImage ? (
               <img
-                src={displayImage.url}
-                alt={displayImage.alt}
+                src={displayImage}
+                alt={product.name}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -160,7 +160,7 @@ export default function ProductPage() {
                   -{discount}%
                 </span>
               )}
-              {!product.inStock && (
+              {!(product.stockAvailable > 0) && (
                 <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-gray-800 text-white">
                   Нет в наличии
                 </span>
@@ -182,12 +182,12 @@ export default function ProductPage() {
             <div className="flex gap-2 overflow-x-auto">
               {product.images.map((img, i) => (
                 <button
-                  key={img.id}
+                  key={i}
                   onClick={() => setActiveImage(i)}
                   className="flex-shrink-0 w-20 h-16 rounded-xl overflow-hidden border-2 transition-colors"
                   style={{ borderColor: activeImage === i ? "#2563EB" : "#E5E7EB" }}
                 >
-                  <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
+                  <img src={img} alt={product.name} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
@@ -214,10 +214,10 @@ export default function ProductPage() {
 
           {/* Rating */}
           <div className="flex items-center gap-3">
-            <StarRating rating={product.rating} size={16} />
-            <span className="text-sm font-semibold text-gray-700">{product.rating.toFixed(1)}</span>
-            <span className="text-sm text-gray-400">{product.reviewCount} отзывов</span>
-            {product.supplier.verified && (
+            <StarRating rating={product.rating ?? 0} size={16} />
+            <span className="text-sm font-semibold text-gray-700">{((product.rating ?? 0)).toFixed(1)}</span>
+            <span className="text-sm text-gray-400">{product.reviewCount ?? 0} отзывов</span>
+            {product.supplier?.verified && (
               <span className="flex items-center gap-1 text-xs text-green-600 font-medium">
                 <Shield size={12} /> Верифицирован
               </span>
@@ -240,10 +240,10 @@ export default function ProductPage() {
 
           {/* Stock */}
           <div className="flex items-center gap-2">
-            {product.inStock ? (
+            {product.stockAvailable > 0 ? (
               <span className="flex items-center gap-1.5 text-sm font-medium text-green-600">
                 <CheckCircle2 size={16} /> В наличии
-                {product.stockQty && <span className="text-gray-400 font-normal">({product.stockQty} {product.unit})</span>}
+                {product.stockAvailable && <span className="text-gray-400 font-normal">({product.stockAvailable} {product.unit})</span>}
               </span>
             ) : (
               <span className="flex items-center gap-1.5 text-sm font-medium text-red-500">
@@ -256,7 +256,7 @@ export default function ProductPage() {
           <div className="flex items-center gap-3">
             <div className="flex items-center border rounded-xl overflow-hidden" style={{ borderColor: "#E5E7EB" }}>
               <button
-                onClick={() => setQuantity((q) => Math.max(product.minOrder, q - 1))}
+                onClick={() => setQuantity((q) => Math.max(product.minOrder ?? 1, q - 1))}
                 className="px-3 py-2.5 hover:bg-gray-50 transition-colors"
               >
                 <Minus size={16} className="text-gray-600" />
@@ -277,7 +277,7 @@ export default function ProductPage() {
           <div className="flex gap-3">
             <button
               onClick={() => addItem(product.id, quantity, product.name)}
-              disabled={cartLoading || !product.inStock}
+              disabled={cartLoading || !(product.stockAvailable > 0)}
               className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50"
               style={{ background: "#2563EB", color: "#fff", fontFamily: "Montserrat, sans-serif" }}
             >
@@ -289,8 +289,8 @@ export default function ProductPage() {
           {/* Supplier card */}
           <LightCard padding="p-4">
             <div className="flex items-center gap-3">
-              {product.supplier.logoUrl ? (
-                <img src={product.supplier.logoUrl} alt={product.supplier.name} className="w-10 h-10 rounded-xl object-cover" />
+              {product.supplier?.logoUrl ? (
+                <img src={product.supplier?.logoUrl} alt={product.supplier?.name ?? "Поставщик"} className="w-10 h-10 rounded-xl object-cover" />
               ) : (
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "#EFF6FF" }}>
                   <Award size={20} className="text-blue-600" />
@@ -298,25 +298,25 @@ export default function ProductPage() {
               )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm text-gray-900">{product.supplier.name}</span>
-                  {product.supplier.verified && (
+                  <span className="font-semibold text-sm text-gray-900">{product.supplier?.name ?? "Поставщик"}</span>
+                  {product.supplier?.verified && (
                     <Shield size={12} className="text-green-500" />
                   )}
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
                   <Star size={11} className="fill-amber-400 text-amber-400" />
-                  <span className="text-xs text-gray-600">{product.supplier.rating} ({product.supplier.reviewCount} отзывов)</span>
+                  <span className="text-xs text-gray-600">{product.supplier?.rating ?? 0} ({product.supplier?.reviewCount ?? 0} отзывов)</span>
                 </div>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t" style={{ borderColor: "#F3F4F6" }}>
               <div className="flex items-center gap-2 text-xs text-gray-600">
                 <Truck size={14} className="text-blue-500" />
-                <span>Доставка {product.supplier.deliveryDays} дн.</span>
+                <span>Доставка {product.supplier?.deliveryDays ?? 5} дн.</span>
               </div>
               <div className="flex items-center gap-2 text-xs text-gray-600">
                 <MapPin size={14} className="text-blue-500" />
-                <span className="truncate">{product.supplier.regions[0]}</span>
+                <span className="truncate">{product.supplier?.regions?.[0] ?? ""}</span>
               </div>
             </div>
           </LightCard>
@@ -357,9 +357,9 @@ export default function ProductPage() {
             <LightCard>
               <h3 className="font-bold text-gray-900 mb-3" style={{ fontFamily: "Montserrat, sans-serif" }}>Описание</h3>
               <p className="text-sm text-gray-600 leading-relaxed">{product.description}</p>
-              {product.tags.length > 0 && (
+              {(product.tags ?? []).length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-4">
-                  {product.tags.map((tag) => (
+                  {(product.tags ?? []).map((tag) => (
                     <span key={tag} className="px-2.5 py-1 rounded-full text-xs" style={{ background: "#F3F4F6", color: "#6B7280" }}>
                       #{tag}
                     </span>
@@ -372,7 +372,7 @@ export default function ProductPage() {
             <LightCard>
               <h3 className="font-bold text-gray-900 mb-3" style={{ fontFamily: "Montserrat, sans-serif" }}>Характеристики</h3>
               <div className="space-y-2">
-                {product.specs.map((spec, i) => (
+                {(product.specs ?? []).map((spec, i) => (
                   <div
                     key={i}
                     className="flex items-center justify-between py-2 border-b last:border-0"
@@ -428,8 +428,8 @@ export default function ProductPage() {
               <h3 className="font-bold text-gray-900 mb-4" style={{ fontFamily: "Montserrat, sans-serif" }}>Доставка</h3>
               <div className="space-y-3">
                 {[
-                  { icon: <Truck size={18} className="text-blue-600" />, title: "Доставка до объекта", text: `Срок: ${product.supplier.deliveryDays} рабочих дней` },
-                  { icon: <MapPin size={18} className="text-blue-600" />, title: "Регионы поставки", text: product.supplier.regions.join(", ") },
+                  { icon: <Truck size={18} className="text-blue-600" />, title: "Доставка до объекта", text: `Срок: ${product.supplier?.deliveryDays ?? 5} рабочих дней` },
+                  { icon: <MapPin size={18} className="text-blue-600" />, title: "Регионы поставки", text: (product.supplier?.regions ?? []).join(", ") },
                   { icon: <Package size={18} className="text-blue-600" />, title: "Минимальный заказ", text: `${product.minOrder} ${product.unit}` },
                 ].map((item) => (
                   <div key={item.title} className="flex gap-3">

@@ -62,7 +62,7 @@ export default function CartPage() {
         {/* ── Cart items ──────────────────────────────────────────────── */}
         <div className="lg:col-span-2 space-y-3">
           {cart.items.map((item) => {
-            const primaryImage = item.product.images.find((i) => i.isPrimary) ?? item.product.images[0];
+            const primaryImage = item.product.images.find((i) => i) ?? item.product.images[0];
             return (
               <LightCard key={item.id} padding="p-4">
                 <div className="flex gap-4">
@@ -70,7 +70,7 @@ export default function CartPage() {
                   <Link href={`/marketplace/${item.productId}`} className="flex-shrink-0">
                     <div className="w-24 h-20 rounded-xl overflow-hidden bg-gray-100">
                       {primaryImage ? (
-                        <img src={primaryImage.url} alt={primaryImage.alt} className="w-full h-full object-cover" />
+                        <img src={primaryImage} alt={"image"} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
                           <Package size={28} className="text-gray-300" />
@@ -89,7 +89,7 @@ export default function CartPage() {
                             {item.product.name}
                           </h3>
                         </Link>
-                        <p className="text-xs text-gray-500 mt-1">{item.product.supplier.name}</p>
+                        <p className="text-xs text-gray-500 mt-1">{item.product.supplier?.name ?? ""}</p>
                       </div>
                       <button
                         onClick={() => removeItem(item.id)}
@@ -104,7 +104,7 @@ export default function CartPage() {
                       <div className="flex items-center border rounded-lg overflow-hidden" style={{ borderColor: "#E5E7EB" }}>
                         <button
                           onClick={() => updateItem(item.id, item.quantity - 1)}
-                          disabled={loading || item.quantity <= item.product.minOrder}
+                          disabled={loading || item.quantity <= (item.product.minOrder ?? 1)}
                           className="px-2.5 py-1.5 hover:bg-gray-50 transition-colors disabled:opacity-40"
                         >
                           <Minus size={13} className="text-gray-600" />

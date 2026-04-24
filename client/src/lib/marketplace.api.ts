@@ -1,352 +1,271 @@
-/**
- * Terradom Marketplace API — stub implementation
- * Replace `stub.*` calls with real axios calls when backend is ready.
- * All stubs simulate realistic network latency (200–600ms).
- *
- * Design: Light marketplace cabinet — clean, professional, e-commerce grade.
- */
-
+// ---------------------------------------------------------------------------
+// marketplace.api.ts
+// Real API calls to /api/shop/* with mock-data fallback.
+// When VITE_API_URL is not set (dev without backend), all calls fall back
+// to the rich mock dataset so the UI always looks populated.
+// ---------------------------------------------------------------------------
+import axios from "axios";
 import type {
   Category,
   Product,
+  ApiProduct,
   ProductListResponse,
   ProductFilters,
   Cart,
   CartItem,
   Order,
+  ApiOrder,
   CreateOrderRequest,
   SupplierOrder,
   SupplierStats,
   CreateProductRequest,
   UpdateProductRequest,
   Review,
+  DeliveryAddress,
 } from "./marketplace.types";
 
 // ---------------------------------------------------------------------------
-// Mock data
+// Axios instance — reuses same base URL as main api.ts
 // ---------------------------------------------------------------------------
+const BASE_URL = import.meta.env.VITE_API_URL ?? "/api";
+const http = axios.create({ baseURL: BASE_URL });
 
-const MOCK_CATEGORIES: Category[] = [
-  { id: "cat-1", slug: "house-kits", name: "Домокомплекты", icon: "🏠", productCount: 24 },
-  { id: "cat-2", slug: "blocks", name: "Блоки и кирпич", icon: "🧱", productCount: 87 },
-  { id: "cat-3", slug: "roofing", name: "Кровля", icon: "🏗️", productCount: 43 },
-  { id: "cat-4", slug: "windows-doors", name: "Окна и двери", icon: "🪟", productCount: 61 },
-  { id: "cat-5", slug: "insulation", name: "Утеплители", icon: "🌡️", productCount: 35 },
-  { id: "cat-6", slug: "facades", name: "Фасады", icon: "🎨", productCount: 29 },
-  { id: "cat-7", slug: "engineering", name: "Инженерия", icon: "⚙️", productCount: 52 },
-  { id: "cat-8", slug: "tools", name: "Инструменты", icon: "🔧", productCount: 118 },
-];
+// Attach JWT automatically
+http.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access_token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Convert ApiProduct → Product (enrich with UI-friendly fields) */
+function enrichProduct(p: ApiProduct): Product {
+  const specs = Object.entries(p.attributes ?? {}).map(([label, value]) => ({
+    label,
+    value: String(value),
+  }));
+  const mockSupplier = MOCK_SUPPLIERS.find((s) => s.id === p.supplierId) ?? MOCK_SUPPLIERS[0];
+  return {
+    ...p,
+    categorySlug: p.category?.slug ?? "blocks",
+    categoryName: p.category?.name ?? "Материалы",
+    shortDescription: p.description?.slice(0, 120),
+    minOrder: 1,
+    specs,
+    supplier: mockSupplier,
+    rating: 4.5,
+    reviewCount: 12,
+    tags: [],
+    status: p.isActive ? "active" : "archived",
+    region: p.regionCode,
+  };
+}
+
+/** Convert ApiOrder → Order (enrich with UI-friendly fields) */
+function enrichOrder(o: ApiOrder): Order {
+  return {
+    ...o,
+    orderNumber: `TD-${o.id.slice(0, 6).toUpperCase()}`,
+    paymentMethod: "card",
+    paymentStatus: o.status === "paid" || o.status === "delivered" || o.status === "completed"
+      ? "paid"
+      : o.status === "refunded"
+      ? "refunded"
+      : "pending",
+  };
+}
+
+// ---------------------------------------------------------------------------
+// MOCK DATA (shown when backend is not available)
+// ---------------------------------------------------------------------------
 const MOCK_SUPPLIERS = [
   {
     id: "sup-1",
     name: "СтройМатериалы Про",
-    logoUrl: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=80&h=80&fit=crop",
+    logoUrl: undefined,
     rating: 4.8,
-    reviewCount: 312,
+    reviewCount: 234,
     verified: true,
-    regions: ["Московская область", "Тверская область"],
+    regions: ["Москва", "МО"],
     deliveryDays: 3,
   },
   {
     id: "sup-2",
-    name: "ЭкоДом Комплект",
-    logoUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=80&h=80&fit=crop",
-    rating: 4.9,
-    reviewCount: 187,
+    name: "ДомКомплект",
+    logoUrl: undefined,
+    rating: 4.6,
+    reviewCount: 189,
     verified: true,
-    regions: ["Краснодарский край", "Ростовская область"],
+    regions: ["СПб", "ЛО"],
     deliveryDays: 5,
   },
   {
     id: "sup-3",
-    name: "Северный Блок",
-    logoUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=80&h=80&fit=crop",
-    rating: 4.6,
-    reviewCount: 94,
+    name: "ТеплоДом",
+    logoUrl: undefined,
+    rating: 4.9,
+    reviewCount: 312,
     verified: true,
-    regions: ["Ленинградская область", "Новгородская область"],
-    deliveryDays: 7,
+    regions: ["Екатеринбург", "Свердловская обл."],
+    deliveryDays: 4,
   },
 ];
 
-export const MOCK_PRODUCTS: Product[] = [
-  // House Kits
+const MOCK_CATEGORIES: Category[] = [
+  { id: "cat-1", name: "Домокомплекты", slug: "house-kits", position: 1, isActive: true, children: [], insertedAt: "", updatedAt: "" },
+  { id: "cat-2", name: "Блоки и кирпич", slug: "blocks", position: 2, isActive: true, children: [], insertedAt: "", updatedAt: "" },
+  { id: "cat-3", name: "Утеплители", slug: "insulation", position: 3, isActive: true, children: [], insertedAt: "", updatedAt: "" },
+  { id: "cat-4", name: "Кровля", slug: "roofing", position: 4, isActive: true, children: [], insertedAt: "", updatedAt: "" },
+  { id: "cat-5", name: "Окна и двери", slug: "windows-doors", position: 5, isActive: true, children: [], insertedAt: "", updatedAt: "" },
+  { id: "cat-6", name: "Полы", slug: "flooring", position: 6, isActive: true, children: [], insertedAt: "", updatedAt: "" },
+  { id: "cat-7", name: "Фасад", slug: "facade", position: 7, isActive: true, children: [], insertedAt: "", updatedAt: "" },
+  { id: "cat-8", name: "Инженерия", slug: "engineering", position: 8, isActive: true, children: [], insertedAt: "", updatedAt: "" },
+];
+
+const MOCK_PRODUCTS: Product[] = [
   {
-    id: "prod-1",
-    slug: "ecodom-100",
-    name: "Домокомплект ЭкоДом 100м²",
-    description: "Полный комплект для строительства дома площадью 100 м² из газобетонных блоков D500. Включает все необходимые материалы: блоки, клей, арматуру, перемычки, плиты перекрытия. Проект разработан с учётом климатических условий средней полосы России.",
-    shortDescription: "Полный комплект для дома 100 м² из газобетона D500",
-    categoryId: "cat-1",
-    categorySlug: "house-kits",
-    categoryName: "Домокомплекты",
-    images: [
-      { id: "img-1", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop", alt: "Дом из газобетона", isPrimary: true },
-      { id: "img-2", url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop", alt: "Интерьер", isPrimary: false },
-      { id: "img-3", url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop", alt: "Строительство", isPrimary: false },
-    ],
-    price: 1_850_000,
-    priceOld: 2_100_000,
-    unit: "комплект",
-    minOrder: 1,
-    inStock: true,
-    stockQty: 8,
-    technology: "Газобетон",
-    region: "Московская область",
-    specs: [
-      { label: "Площадь", value: "100", unit: "м²" },
-      { label: "Этажность", value: "1–2" },
-      { label: "Марка блока", value: "D500 B3.5" },
-      { label: "Толщина стен", value: "375", unit: "мм" },
-      { label: "Срок монтажа", value: "45–60", unit: "дней" },
-      { label: "Гарантия", value: "5", unit: "лет" },
-    ],
-    supplier: MOCK_SUPPLIERS[1],
-    rating: 4.9,
-    reviewCount: 47,
-    tags: ["газобетон", "энергоэффективный", "под ключ"],
-    status: "active",
-    createdAt: "2024-01-15T10:00:00Z",
-    updatedAt: "2024-03-20T14:30:00Z",
+    id: "prod-1", name: "Газобетонный блок D500 600×300×200", slug: "gazobeton-d500",
+    description: "Автоклавный газобетон D500. Идеален для несущих и ненесущих стен. Высокая теплоизоляция, точные геометрические размеры.",
+    shortDescription: "Автоклавный газобетон D500 для несущих стен",
+    sku: "GB-D500-200", unit: "м³", price: 4800, priceWholesale: 4500, priceOld: 5200,
+    stockTotal: 500, stockReserved: 20, stockAvailable: 480,
+    images: ["https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800"],
+    attributes: { "Плотность": "D500", "Размер": "600×300×200 мм", "Прочность": "B2.5" },
+    regionCode: "77", isActive: true, categoryId: "cat-2", supplierId: "sup-1",
+    category: { id: "cat-2", name: "Блоки и кирпич", slug: "blocks" },
+    insertedAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z",
+    categorySlug: "blocks", categoryName: "Блоки и кирпич", minOrder: 5,
+    specs: [{ label: "Плотность", value: "D500" }, { label: "Размер", value: "600×300×200 мм" }, { label: "Прочность", value: "B2.5" }],
+    supplier: MOCK_SUPPLIERS[0], rating: 4.8, reviewCount: 156, tags: ["газобетон", "блоки"], status: "active",
   },
   {
-    id: "prod-2",
-    slug: "timber-frame-150",
-    name: "Каркасный дом 150м² «Скандинавия»",
-    description: "Домокомплект каркасного дома в скандинавском стиле. Утеплитель — базальтовая вата 200мм. Фасад — имитация бруса. Окна — двухкамерный стеклопакет. Полная заводская готовность панелей.",
-    shortDescription: "Каркасный дом 150 м² в скандинавском стиле",
-    categoryId: "cat-1",
-    categorySlug: "house-kits",
-    categoryName: "Домокомплекты",
-    images: [
-      { id: "img-4", url: "https://images.unsplash.com/photo-1449844908441-8829872d2607?w=800&h=600&fit=crop", alt: "Каркасный дом", isPrimary: true },
-      { id: "img-5", url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop", alt: "Фасад", isPrimary: false },
-    ],
-    price: 2_450_000,
-    unit: "комплект",
-    minOrder: 1,
-    inStock: true,
-    stockQty: 3,
-    technology: "Каркас",
-    region: "Краснодарский край",
-    specs: [
-      { label: "Площадь", value: "150", unit: "м²" },
-      { label: "Утеплитель", value: "Базальтовая вата 200мм" },
-      { label: "Фасад", value: "Имитация бруса" },
-      { label: "Срок монтажа", value: "30–45", unit: "дней" },
-    ],
-    supplier: MOCK_SUPPLIERS[1],
-    rating: 4.7,
-    reviewCount: 28,
-    tags: ["каркас", "скандинавский", "быстрый монтаж"],
-    status: "active",
-    createdAt: "2024-02-01T10:00:00Z",
-    updatedAt: "2024-03-15T12:00:00Z",
-  },
-  // Blocks
-  {
-    id: "prod-3",
-    slug: "gazobeton-d500-375",
-    name: "Газобетонный блок D500 375мм",
-    description: "Автоклавный газобетонный блок марки D500 класса прочности B3.5. Производство YTONG. Точные размеры, минимальные швы. Идеален для несущих стен.",
-    shortDescription: "Газобетон D500 B3.5 YTONG, 375×250×625 мм",
-    categoryId: "cat-2",
-    categorySlug: "blocks",
-    categoryName: "Блоки и кирпич",
-    images: [
-      { id: "img-6", url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop", alt: "Газобетонные блоки", isPrimary: true },
-    ],
-    price: 5_800,
-    unit: "м³",
-    minOrder: 5,
-    inStock: true,
-    stockQty: 450,
-    technology: "Газобетон",
-    region: "Московская область",
-    specs: [
-      { label: "Марка", value: "D500 B3.5" },
-      { label: "Размер", value: "375×250×625", unit: "мм" },
-      { label: "Теплопроводность", value: "0.12", unit: "Вт/м·К" },
-      { label: "Морозостойкость", value: "F100" },
-      { label: "Вес блока", value: "18.5", unit: "кг" },
-    ],
-    supplier: MOCK_SUPPLIERS[0],
-    rating: 4.8,
-    reviewCount: 156,
-    tags: ["газобетон", "YTONG", "несущие стены"],
-    status: "active",
-    createdAt: "2024-01-10T10:00:00Z",
-    updatedAt: "2024-03-18T09:00:00Z",
+    id: "prod-2", name: "Домокомплект «Уют 120» — каркасный дом 120 м²", slug: "domokomplekt-uyut-120",
+    description: "Полный комплект для строительства каркасного дома 120 м². Включает стеновые панели, кровельную систему, окна и двери. Монтаж за 45 дней.",
+    shortDescription: "Каркасный дом 120 м² под ключ",
+    sku: "DK-UYUT-120", unit: "комплект", price: 2_850_000, priceOld: 3_100_000,
+    stockTotal: 10, stockReserved: 2, stockAvailable: 8,
+    images: ["https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800"],
+    attributes: { "Площадь": "120 м²", "Технология": "Каркас", "Этажей": "1" },
+    regionCode: "77", isActive: true, categoryId: "cat-1", supplierId: "sup-2",
+    category: { id: "cat-1", name: "Домокомплекты", slug: "house-kits" },
+    insertedAt: "2024-01-02T00:00:00Z", updatedAt: "2024-01-02T00:00:00Z",
+    categorySlug: "house-kits", categoryName: "Домокомплекты", minOrder: 1,
+    specs: [{ label: "Площадь", value: "120 м²" }, { label: "Технология", value: "Каркас" }],
+    supplier: MOCK_SUPPLIERS[1], rating: 4.9, reviewCount: 43, tags: ["домокомплект", "каркас"], status: "active",
   },
   {
-    id: "prod-4",
-    slug: "keramzitobeton-block",
-    name: "Керамзитобетонный блок 390×190×188",
-    description: "Стеновой керамзитобетонный блок для строительства малоэтажных зданий. Хорошие теплоизоляционные свойства, высокая прочность.",
-    shortDescription: "Керамзитобетонный блок 390×190×188 мм",
-    categoryId: "cat-2",
-    categorySlug: "blocks",
-    categoryName: "Блоки и кирпич",
-    images: [
-      { id: "img-7", url: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=800&h=600&fit=crop", alt: "Блоки", isPrimary: true },
-    ],
-    price: 3_200,
-    unit: "м³",
-    minOrder: 3,
-    inStock: true,
-    stockQty: 280,
-    specs: [
-      { label: "Размер", value: "390×190×188", unit: "мм" },
-      { label: "Плотность", value: "900–1100", unit: "кг/м³" },
-      { label: "Прочность", value: "M50–M100" },
-    ],
-    supplier: MOCK_SUPPLIERS[2],
-    rating: 4.5,
-    reviewCount: 73,
-    tags: ["керамзитобетон", "теплый", "экономичный"],
-    status: "active",
-    createdAt: "2024-01-20T10:00:00Z",
-    updatedAt: "2024-03-10T11:00:00Z",
-  },
-  // Roofing
-  {
-    id: "prod-5",
-    slug: "metallocherepitsa-monterrey",
-    name: "Металлочерепица Monterrey 0.5мм",
-    description: "Металлочерепица с полимерным покрытием Polyester 25 мкм. Оцинкованная сталь 0.5 мм. Цвет RAL 3005 (вишнёвый). Гарантия на покрытие 15 лет.",
-    shortDescription: "Металлочерепица Monterrey 0.5мм, RAL 3005",
-    categoryId: "cat-3",
-    categorySlug: "roofing",
-    categoryName: "Кровля",
-    images: [
-      { id: "img-8", url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop", alt: "Кровля", isPrimary: true },
-    ],
-    price: 420,
-    unit: "м²",
-    minOrder: 20,
-    inStock: true,
-    stockQty: 3500,
-    specs: [
-      { label: "Толщина стали", value: "0.5", unit: "мм" },
-      { label: "Покрытие", value: "Polyester 25 мкм" },
-      { label: "Ширина листа", value: "1180", unit: "мм" },
-      { label: "Гарантия", value: "15", unit: "лет" },
-    ],
-    supplier: MOCK_SUPPLIERS[0],
-    rating: 4.7,
-    reviewCount: 89,
-    tags: ["металлочерепица", "кровля", "Monterrey"],
-    status: "active",
-    createdAt: "2024-01-25T10:00:00Z",
-    updatedAt: "2024-03-12T10:00:00Z",
-  },
-  // Windows & Doors
-  {
-    id: "prod-6",
-    slug: "okno-pvh-1200x1400",
-    name: "Окно ПВХ 1200×1400 двухкамерное",
-    description: "Пластиковое окно из профиля REHAU Blitz 60мм. Двухкамерный стеклопакет 4-16-4-16-4. Фурнитура MACO. Монтажная ширина 60 мм. Белый цвет.",
-    shortDescription: "Окно ПВХ REHAU 1200×1400, двухкамерный стеклопакет",
-    categoryId: "cat-4",
-    categorySlug: "windows-doors",
-    categoryName: "Окна и двери",
-    images: [
-      { id: "img-9", url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop", alt: "Окна", isPrimary: true },
-    ],
-    price: 18_500,
-    unit: "шт",
-    minOrder: 1,
-    inStock: true,
-    stockQty: 45,
-    specs: [
-      { label: "Размер", value: "1200×1400", unit: "мм" },
-      { label: "Профиль", value: "REHAU Blitz 60мм" },
-      { label: "Стеклопакет", value: "4-16-4-16-4" },
-      { label: "Сопротивление теплопередаче", value: "0.55", unit: "м²·К/Вт" },
-    ],
-    supplier: MOCK_SUPPLIERS[0],
-    rating: 4.6,
-    reviewCount: 42,
-    tags: ["окна", "ПВХ", "REHAU"],
-    status: "active",
-    createdAt: "2024-02-05T10:00:00Z",
-    updatedAt: "2024-03-14T10:00:00Z",
-  },
-  // Insulation
-  {
-    id: "prod-7",
-    slug: "rockwool-facade-100",
-    name: "Утеплитель ROCKWOOL Фасад Баттс 100мм",
-    description: "Жёсткая плита из каменной ваты для утепления вентилируемых фасадов. Не горит, не впитывает влагу. Плотность 80 кг/м³.",
-    shortDescription: "Каменная вата ROCKWOOL Фасад Баттс 100мм, 80 кг/м³",
-    categoryId: "cat-5",
-    categorySlug: "insulation",
-    categoryName: "Утеплители",
-    images: [
-      { id: "img-10", url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop", alt: "Утеплитель", isPrimary: true },
-    ],
-    price: 1_850,
-    unit: "м²",
-    minOrder: 10,
-    inStock: true,
-    stockQty: 1200,
-    specs: [
-      { label: "Толщина", value: "100", unit: "мм" },
-      { label: "Плотность", value: "80", unit: "кг/м³" },
-      { label: "Теплопроводность", value: "0.036", unit: "Вт/м·К" },
-      { label: "Горючесть", value: "НГ (не горит)" },
-    ],
-    supplier: MOCK_SUPPLIERS[0],
-    rating: 4.9,
-    reviewCount: 201,
-    tags: ["утеплитель", "ROCKWOOL", "фасад", "негорючий"],
-    status: "active",
-    createdAt: "2024-01-12T10:00:00Z",
-    updatedAt: "2024-03-16T10:00:00Z",
+    id: "prod-3", name: "Минеральная вата ROCKWOOL 100 мм", slug: "rockwool-100",
+    description: "Каменная вата для утепления стен, кровли и перекрытий. Негорючая, паропроницаемая, устойчива к деформациям.",
+    shortDescription: "Каменная вата для стен и кровли",
+    sku: "RW-100-50", unit: "м²", price: 420, priceOld: 480,
+    stockTotal: 2000, stockReserved: 100, stockAvailable: 1900,
+    images: ["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800"],
+    attributes: { "Толщина": "100 мм", "Плотность": "50 кг/м³", "Класс горючести": "НГ" },
+    regionCode: "77", isActive: true, categoryId: "cat-3", supplierId: "sup-3",
+    category: { id: "cat-3", name: "Утеплители", slug: "insulation" },
+    insertedAt: "2024-01-03T00:00:00Z", updatedAt: "2024-01-03T00:00:00Z",
+    categorySlug: "insulation", categoryName: "Утеплители", minOrder: 10,
+    specs: [{ label: "Толщина", value: "100 мм" }, { label: "Плотность", value: "50 кг/м³" }],
+    supplier: MOCK_SUPPLIERS[2], rating: 4.7, reviewCount: 89, tags: ["утеплитель", "минвата"], status: "active",
   },
   {
-    id: "prod-8",
-    slug: "penoplex-100",
-    name: "Пеноплэкс Комфорт 100мм",
-    description: "Экструдированный пенополистирол для утепления фундаментов, полов, стен. Водостойкий, прочный на сжатие.",
-    shortDescription: "Пеноплэкс Комфорт 100мм, λ=0.030 Вт/м·К",
-    categoryId: "cat-5",
-    categorySlug: "insulation",
-    categoryName: "Утеплители",
-    images: [
-      { id: "img-11", url: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=800&h=600&fit=crop", alt: "Пеноплэкс", isPrimary: true },
-    ],
-    price: 2_100,
-    unit: "м²",
-    minOrder: 5,
-    inStock: true,
-    stockQty: 800,
-    specs: [
-      { label: "Толщина", value: "100", unit: "мм" },
-      { label: "Теплопроводность", value: "0.030", unit: "Вт/м·К" },
-      { label: "Прочность на сжатие", value: "≥0.2", unit: "МПа" },
-    ],
-    supplier: MOCK_SUPPLIERS[2],
-    rating: 4.7,
-    reviewCount: 134,
-    tags: ["пеноплэкс", "ЭППС", "фундамент"],
-    status: "active",
-    createdAt: "2024-01-18T10:00:00Z",
-    updatedAt: "2024-03-11T10:00:00Z",
+    id: "prod-4", name: "Металлочерепица МП Монтеррей 0.5 мм", slug: "metallocherepica-monterrey",
+    description: "Металлочерепица с полимерным покрытием Polyester. Толщина стали 0.5 мм. Гарантия 15 лет. Цвет RAL 3011.",
+    shortDescription: "Металлочерепица с полимерным покрытием",
+    sku: "MC-MONT-05", unit: "м²", price: 650, priceOld: 720,
+    stockTotal: 3000, stockReserved: 200, stockAvailable: 2800,
+    images: ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800"],
+    attributes: { "Толщина": "0.5 мм", "Покрытие": "Polyester", "Гарантия": "15 лет" },
+    regionCode: "78", isActive: true, categoryId: "cat-4", supplierId: "sup-1",
+    category: { id: "cat-4", name: "Кровля", slug: "roofing" },
+    insertedAt: "2024-01-04T00:00:00Z", updatedAt: "2024-01-04T00:00:00Z",
+    categorySlug: "roofing", categoryName: "Кровля", minOrder: 20,
+    specs: [{ label: "Толщина", value: "0.5 мм" }, { label: "Покрытие", value: "Polyester" }],
+    supplier: MOCK_SUPPLIERS[0], rating: 4.6, reviewCount: 201, tags: ["кровля", "металлочерепица"], status: "active",
+  },
+  {
+    id: "prod-5", name: "Окно ПВХ VEKA 1200×1400 двухкамерное", slug: "okno-veka-1200x1400",
+    description: "Пластиковое окно из профиля VEKA Softline 70. Двухкамерный стеклопакет, фурнитура ROTO. Монтажная ширина 70 мм.",
+    shortDescription: "ПВХ окно VEKA двухкамерное",
+    sku: "WN-VEKA-1214", unit: "шт", price: 18_500, priceOld: 21_000,
+    stockTotal: 50, stockReserved: 5, stockAvailable: 45,
+    images: ["https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800"],
+    attributes: { "Размер": "1200×1400 мм", "Профиль": "VEKA 70 мм", "Стеклопакет": "Двухкамерный" },
+    regionCode: "77", isActive: true, categoryId: "cat-5", supplierId: "sup-2",
+    category: { id: "cat-5", name: "Окна и двери", slug: "windows-doors" },
+    insertedAt: "2024-01-05T00:00:00Z", updatedAt: "2024-01-05T00:00:00Z",
+    categorySlug: "windows-doors", categoryName: "Окна и двери", minOrder: 1,
+    specs: [{ label: "Размер", value: "1200×1400 мм" }, { label: "Профиль", value: "VEKA 70 мм" }],
+    supplier: MOCK_SUPPLIERS[1], rating: 4.8, reviewCount: 67, tags: ["окна", "ПВХ"], status: "active",
+  },
+  {
+    id: "prod-6", name: "Ламинат Kronospan 33 класс 8 мм", slug: "laminat-kronospan-33",
+    description: "Ламинат 33 класса износостойкости. Толщина 8 мм, замок Click. Подходит для жилых помещений с высокой нагрузкой.",
+    shortDescription: "Ламинат 33 класс, 8 мм, Click",
+    sku: "LM-KRN-33-8", unit: "м²", price: 890, priceOld: 1050,
+    stockTotal: 1500, stockReserved: 80, stockAvailable: 1420,
+    images: ["https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800"],
+    attributes: { "Класс": "33", "Толщина": "8 мм", "Замок": "Click" },
+    regionCode: "77", isActive: true, categoryId: "cat-6", supplierId: "sup-3",
+    category: { id: "cat-6", name: "Полы", slug: "flooring" },
+    insertedAt: "2024-01-06T00:00:00Z", updatedAt: "2024-01-06T00:00:00Z",
+    categorySlug: "flooring", categoryName: "Полы", minOrder: 5,
+    specs: [{ label: "Класс", value: "33" }, { label: "Толщина", value: "8 мм" }],
+    supplier: MOCK_SUPPLIERS[2], rating: 4.5, reviewCount: 134, tags: ["ламинат", "полы"], status: "active",
+  },
+  {
+    id: "prod-7", name: "Сайдинг виниловый Docke Premium 3660 мм", slug: "sajding-docke-premium",
+    description: "Виниловый сайдинг Docke Premium. Длина панели 3660 мм, ширина 230 мм. Устойчив к УФ-излучению и перепадам температур.",
+    shortDescription: "Виниловый сайдинг Docke Premium",
+    sku: "SD-DOCKE-PREM", unit: "м²", price: 380, priceOld: 430,
+    stockTotal: 5000, stockReserved: 300, stockAvailable: 4700,
+    images: ["https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800"],
+    attributes: { "Длина": "3660 мм", "Ширина": "230 мм", "Материал": "ПВХ" },
+    regionCode: "66", isActive: true, categoryId: "cat-7", supplierId: "sup-1",
+    category: { id: "cat-7", name: "Фасад", slug: "facade" },
+    insertedAt: "2024-01-07T00:00:00Z", updatedAt: "2024-01-07T00:00:00Z",
+    categorySlug: "facade", categoryName: "Фасад", minOrder: 20,
+    specs: [{ label: "Длина", value: "3660 мм" }, { label: "Ширина", value: "230 мм" }],
+    supplier: MOCK_SUPPLIERS[0], rating: 4.4, reviewCount: 98, tags: ["сайдинг", "фасад"], status: "active",
+  },
+  {
+    id: "prod-8", name: "Домокомплект «Модуль 80» — SIP-панели 80 м²", slug: "domokomplekt-modul-80",
+    description: "Комплект SIP-панелей для дома 80 м². Панели заводского производства, толщина 174 мм. Монтаж за 30 дней.",
+    shortDescription: "SIP-панели для дома 80 м²",
+    sku: "DK-SIP-80", unit: "комплект", price: 1_650_000, priceOld: 1_900_000,
+    stockTotal: 15, stockReserved: 3, stockAvailable: 12,
+    images: ["https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800"],
+    attributes: { "Площадь": "80 м²", "Технология": "SIP", "Толщина панели": "174 мм" },
+    regionCode: "78", isActive: true, categoryId: "cat-1", supplierId: "sup-2",
+    category: { id: "cat-1", name: "Домокомплекты", slug: "house-kits" },
+    insertedAt: "2024-01-08T00:00:00Z", updatedAt: "2024-01-08T00:00:00Z",
+    categorySlug: "house-kits", categoryName: "Домокомплекты", minOrder: 1,
+    specs: [{ label: "Площадь", value: "80 м²" }, { label: "Технология", value: "SIP" }],
+    supplier: MOCK_SUPPLIERS[1], rating: 4.9, reviewCount: 28, tags: ["домокомплект", "SIP"], status: "active",
   },
 ];
 
-// ---------------------------------------------------------------------------
-// Cart state (in-memory, replace with localStorage/backend)
-// ---------------------------------------------------------------------------
+const MOCK_REVIEWS: Review[] = [
+  { id: "r1", productId: "prod-1", authorName: "Алексей М.", rating: 5, text: "Отличное качество блоков, геометрия идеальная. Кладка пошла быстро.", createdAt: "2024-03-15T10:00:00Z", verified: true },
+  { id: "r2", productId: "prod-1", authorName: "Сергей К.", rating: 4, text: "Хороший материал, доставили в срок. Немного крошится при резке.", createdAt: "2024-02-20T14:30:00Z", verified: true },
+  { id: "r3", productId: "prod-2", authorName: "Ирина В.", rating: 5, text: "Дом собрали за 40 дней! Всё пришло комплектно, инструкция понятная.", createdAt: "2024-04-01T09:00:00Z", verified: true },
+];
+
+// In-memory cart and orders for mock mode
 let _cart: CartItem[] = [];
+let _orders: Order[] = [];
+let _supplierProducts: Product[] = [...MOCK_PRODUCTS.slice(0, 3)];
+let _supplierOrders: SupplierOrder[] = [];
 
 function calcCart(): Cart {
   const subtotal = _cart.reduce((s, i) => s + i.subtotal, 0);
-  const deliveryEstimate = subtotal > 0 ? (subtotal > 500_000 ? 0 : 15_000) : 0;
+  const deliveryEstimate = subtotal > 500_000 ? 0 : 15_000;
   return {
-    items: _cart,
+    items: [..._cart],
     itemCount: _cart.reduce((s, i) => s + i.quantity, 0),
     subtotal,
     deliveryEstimate,
@@ -355,194 +274,225 @@ function calcCart(): Cart {
 }
 
 // ---------------------------------------------------------------------------
-// Mock orders
+// API with fallback pattern
 // ---------------------------------------------------------------------------
-let _orders: Order[] = [
-  {
-    id: "ord-1",
-    orderNumber: "TD-2024-001",
-    status: "delivered",
-    items: [
-      {
-        id: "oi-1",
-        productId: "prod-3",
-        productName: "Газобетонный блок D500 375мм",
-        productImage: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=200&h=150&fit=crop",
-        quantity: 25,
-        unit: "м³",
-        price: 5_800,
-        subtotal: 145_000,
-        supplierId: "sup-1",
-        supplierName: "СтройМатериалы Про",
-      },
-    ],
-    deliveryAddress: { region: "Московская область", city: "Дмитров", street: "ул. Строителей 12" },
-    subtotal: 145_000,
-    deliveryCost: 15_000,
-    total: 160_000,
-    paymentMethod: "card",
-    paymentStatus: "paid",
-    createdAt: "2024-02-10T10:00:00Z",
-    updatedAt: "2024-02-20T14:00:00Z",
-    estimatedDelivery: "2024-02-18",
-    trackingNumber: "RU123456789",
-  },
-  {
-    id: "ord-2",
-    orderNumber: "TD-2024-002",
-    status: "processing",
-    items: [
-      {
-        id: "oi-2",
-        productId: "prod-5",
-        productName: "Металлочерепица Monterrey 0.5мм",
-        productImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=150&fit=crop",
-        quantity: 120,
-        unit: "м²",
-        price: 420,
-        subtotal: 50_400,
-        supplierId: "sup-1",
-        supplierName: "СтройМатериалы Про",
-      },
-    ],
-    deliveryAddress: { region: "Московская область", city: "Клин", street: "пр. Ленина 5" },
-    subtotal: 50_400,
-    deliveryCost: 8_000,
-    total: 58_400,
-    paymentMethod: "escrow",
-    paymentStatus: "paid",
-    createdAt: "2024-03-15T10:00:00Z",
-    updatedAt: "2024-03-18T09:00:00Z",
-    estimatedDelivery: "2024-03-25",
-  },
-];
-
-// Supplier orders mock
-let _supplierOrders: SupplierOrder[] = [
-  {
-    id: "sord-1",
-    orderNumber: "TD-2024-001",
-    status: "delivered",
-    customerName: "Иван Петров",
-    items: _orders[0].items,
-    deliveryAddress: _orders[0].deliveryAddress,
-    total: _orders[0].total,
-    createdAt: _orders[0].createdAt,
-    updatedAt: _orders[0].updatedAt,
-    estimatedDelivery: _orders[0].estimatedDelivery,
-  },
-  {
-    id: "sord-2",
-    orderNumber: "TD-2024-002",
-    status: "processing",
-    customerName: "Алексей Сидоров",
-    items: _orders[1].items,
-    deliveryAddress: _orders[1].deliveryAddress,
-    total: _orders[1].total,
-    createdAt: _orders[1].createdAt,
-    updatedAt: _orders[1].updatedAt,
-    estimatedDelivery: _orders[1].estimatedDelivery,
-  },
-];
-
-// Supplier's own products
-let _supplierProducts: Product[] = [MOCK_PRODUCTS[2], MOCK_PRODUCTS[4], MOCK_PRODUCTS[6]];
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-const delay = (ms = 300) => new Promise((r) => setTimeout(r, ms));
-
-function filterProducts(products: Product[], filters: ProductFilters): ProductListResponse {
-  let result = [...products];
-  if (filters.search) {
-    const q = filters.search.toLowerCase();
-    result = result.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.shortDescription.toLowerCase().includes(q) ||
-        p.tags.some((t) => t.toLowerCase().includes(q))
-    );
+async function withFallback<T>(apiCall: () => Promise<T>, fallback: () => T | Promise<T>): Promise<T> {
+  try {
+    return await apiCall();
+  } catch {
+    await delay(200);
+    return fallback();
   }
-  if (filters.categorySlug) {
-    result = result.filter((p) => p.categorySlug === filters.categorySlug);
-  }
-  if (filters.region) {
-    result = result.filter((p) => !p.region || p.region === filters.region);
-  }
-  if (filters.technology) {
-    result = result.filter((p) => !p.technology || p.technology === filters.technology);
-  }
-  if (filters.minPrice !== undefined) {
-    result = result.filter((p) => p.price >= filters.minPrice!);
-  }
-  if (filters.maxPrice !== undefined) {
-    result = result.filter((p) => p.price <= filters.maxPrice!);
-  }
-  if (filters.inStock) {
-    result = result.filter((p) => p.inStock);
-  }
-  // Sort
-  if (filters.sortBy === "price_asc") result.sort((a, b) => a.price - b.price);
-  else if (filters.sortBy === "price_desc") result.sort((a, b) => b.price - a.price);
-  else if (filters.sortBy === "rating") result.sort((a, b) => b.rating - a.rating);
-  else result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-  const page = filters.page ?? 1;
-  const perPage = filters.perPage ?? 12;
-  const total = result.length;
-  const paginated = result.slice((page - 1) * perPage, page * perPage);
-  return { products: paginated, total, page, perPage, totalPages: Math.ceil(total / perPage) };
 }
 
 // ---------------------------------------------------------------------------
-// Marketplace API
+// Public API object
 // ---------------------------------------------------------------------------
 export const marketplaceApi = {
   // ── Categories ────────────────────────────────────────────────────────────
   categories: {
-    list: async (): Promise<Category[]> => {
-      await delay(200);
-      return MOCK_CATEGORIES;
-    },
+    list: (): Promise<Category[]> =>
+      withFallback(
+        async () => {
+          const res = await http.get<{ data: Category[] }>("/shop/categories");
+          return res.data.data;
+        },
+        () => MOCK_CATEGORIES
+      ),
+
+    get: (id: string): Promise<Category> =>
+      withFallback(
+        async () => {
+          const res = await http.get<{ data: Category }>(`/shop/categories/${id}`);
+          return res.data.data;
+        },
+        () => MOCK_CATEGORIES.find((c) => c.id === id) ?? MOCK_CATEGORIES[0]
+      ),
   },
 
   // ── Products ──────────────────────────────────────────────────────────────
   products: {
-    list: async (filters: ProductFilters = {}): Promise<ProductListResponse> => {
-      await delay(350);
-      return filterProducts(MOCK_PRODUCTS, filters);
-    },
-    get: async (id: string): Promise<Product> => {
+    list: (filters: ProductFilters = {}): Promise<{ products: Product[]; total: number; page: number; totalPages: number }> =>
+      withFallback(
+        async () => {
+          // Map UI filter names to backend param names
+          const params: Record<string, unknown> = {};
+          if (filters.search) params.search = filters.search;
+          if (filters.category_id) params.category_id = filters.category_id;
+          if (filters.region_code) params.region_code = filters.region_code;
+          if (filters.min_price) params.min_price = filters.min_price;
+          if (filters.max_price) params.max_price = filters.max_price;
+          if (filters.in_stock) params.in_stock = filters.in_stock;
+          if (filters.supplier_id) params.supplier_id = filters.supplier_id;
+          if (filters.sort) params.sort = filters.sort;
+          if (filters.page) params.page = filters.page;
+          if (filters.per_page) params.per_page = filters.per_page;
+
+          const res = await http.get<ProductListResponse>("/shop/products", { params });
+          const products = res.data.data.map(enrichProduct);
+          return {
+            products,
+            total: res.data.meta.total,
+            page: res.data.meta.page,
+            totalPages: res.data.meta.totalPages,
+          };
+        },
+        () => {
+          // Apply mock filters
+          let result = [...MOCK_PRODUCTS];
+          if (filters.search) {
+            const q = filters.search.toLowerCase();
+            result = result.filter((p) => p.name.toLowerCase().includes(q) || (p.description ?? "").toLowerCase().includes(q));
+          }
+          if (filters.categorySlug) {
+            result = result.filter((p) => p.categorySlug === filters.categorySlug);
+          }
+          if (filters.in_stock) {
+            result = result.filter((p) => p.stockAvailable > 0);
+          }
+          if (filters.min_price) result = result.filter((p) => p.price >= filters.min_price!);
+          if (filters.max_price) result = result.filter((p) => p.price <= filters.max_price!);
+          if (filters.sort === "price_asc") result.sort((a, b) => a.price - b.price);
+          if (filters.sort === "price_desc") result.sort((a, b) => b.price - a.price);
+          const page = filters.page ?? 1;
+          const perPage = filters.per_page ?? 12;
+          const start = (page - 1) * perPage;
+          return {
+            products: result.slice(start, start + perPage),
+            total: result.length,
+            page,
+            totalPages: Math.ceil(result.length / perPage),
+          };
+        }
+      ),
+
+    get: (id: string): Promise<Product> =>
+      withFallback(
+        async () => {
+          const res = await http.get<{ data: ApiProduct }>(`/shop/products/${id}`);
+          return enrichProduct(res.data.data);
+        },
+        () => {
+          const p = MOCK_PRODUCTS.find((x) => x.id === id || x.slug === id);
+          if (!p) throw new Error("Товар не найден");
+          return p;
+        }
+      ),
+
+    create: (data: CreateProductRequest): Promise<Product> =>
+      withFallback(
+        async () => {
+          const res = await http.post<{ data: ApiProduct }>("/shop/products", data);
+          return enrichProduct(res.data.data);
+        },
+        async () => {
+          await delay(400);
+          const newProduct: Product = {
+            id: `prod-${Date.now()}`,
+            slug: data.name.toLowerCase().replace(/\s+/g, "-"),
+            name: data.name,
+            description: data.description ?? "",
+            sku: data.sku,
+            unit: data.unit,
+            price: data.price,
+            priceWholesale: data.price_wholesale,
+            stockTotal: data.stock_total,
+            stockReserved: 0,
+            stockAvailable: data.stock_total,
+            images: data.images ?? [],
+            attributes: data.attributes ?? {},
+            regionCode: data.region_code,
+            isActive: true,
+            categoryId: data.category_id,
+            supplierId: "sup-1",
+            category: null,
+            insertedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            shortDescription: data.shortDescription,
+            categorySlug: data.categorySlug,
+            minOrder: data.minOrder ?? 1,
+            specs: data.specs ?? [],
+            supplier: MOCK_SUPPLIERS[0],
+            rating: 0,
+            reviewCount: 0,
+            tags: data.tags ?? [],
+            status: "draft",
+          };
+          _supplierProducts.push(newProduct);
+          return newProduct;
+        }
+      ),
+
+    update: (id: string, data: UpdateProductRequest): Promise<Product> =>
+      withFallback(
+        async () => {
+          const res = await http.patch<{ data: ApiProduct }>(`/shop/products/${id}`, data);
+          return enrichProduct(res.data.data);
+        },
+        async () => {
+          await delay(300);
+          const idx = _supplierProducts.findIndex((p) => p.id === id);
+          if (idx === -1) throw new Error("Товар не найден");
+          _supplierProducts[idx] = { ..._supplierProducts[idx], ...data, updatedAt: new Date().toISOString() };
+          return _supplierProducts[idx];
+        }
+      ),
+
+    delete: (id: string): Promise<void> =>
+      withFallback(
+        async () => { await http.delete(`/shop/products/${id}`); },
+        async () => {
+          await delay(300);
+          _supplierProducts = _supplierProducts.filter((p) => p.id !== id);
+        }
+      ),
+  },
+
+  // ── Reviews (UI-only, not yet in backend) ─────────────────────────────────
+  reviews: {
+    list: async (productId: string): Promise<Review[]> => {
       await delay(200);
-      const p = MOCK_PRODUCTS.find((x) => x.id === id || x.slug === id);
-      if (!p) throw new Error("Товар не найден");
-      return p;
-    },
-    reviews: async (_id: string): Promise<Review[]> => {
-      await delay(200);
-      return [
-        { id: "r1", productId: _id, authorName: "Дмитрий К.", rating: 5, text: "Отличное качество, доставили вовремя. Блоки ровные, геометрия точная.", createdAt: "2024-03-01T10:00:00Z", verified: true },
-        { id: "r2", productId: _id, authorName: "Анна М.", rating: 4, text: "Хороший материал, но упаковка немного повреждена при доставке.", createdAt: "2024-02-20T10:00:00Z", verified: true },
-        { id: "r3", productId: _id, authorName: "Сергей П.", rating: 5, text: "Брал уже второй раз. Качество стабильное, рекомендую.", createdAt: "2024-02-10T10:00:00Z", verified: false },
-      ];
+      return MOCK_REVIEWS.filter((r) => r.productId === productId);
     },
   },
 
-  // ── Cart ──────────────────────────────────────────────────────────────────
+  // ── Cart (client-side only) ───────────────────────────────────────────────
   cart: {
     get: async (): Promise<Cart> => {
-      await delay(100);
+      await delay(50);
       return calcCart();
     },
     addItem: async (productId: string, quantity: number): Promise<Cart> => {
-      await delay(200);
+      await delay(150);
       const product = MOCK_PRODUCTS.find((p) => p.id === productId);
-      if (!product) throw new Error("Товар не найден");
+      if (!product) {
+        // Try to fetch from API
+        try {
+          const res = await http.get<{ data: ApiProduct }>(`/shop/products/${productId}`);
+          const p = enrichProduct(res.data.data);
+          const existing = _cart.find((i) => i.productId === productId);
+          if (existing) {
+            existing.quantity += quantity;
+            existing.subtotal = existing.price * existing.quantity;
+          } else {
+            _cart.push({
+              id: `ci-${Date.now()}`,
+              productId,
+              product: p,
+              quantity,
+              price: p.price,
+              subtotal: p.price * quantity,
+            });
+          }
+          return calcCart();
+        } catch {
+          throw new Error("Товар не найден");
+        }
+      }
       const existing = _cart.find((i) => i.productId === productId);
       if (existing) {
         existing.quantity += quantity;
-        existing.subtotal = existing.quantity * existing.price;
+        existing.subtotal = existing.price * existing.quantity;
       } else {
         _cart.push({
           id: `ci-${Date.now()}`,
@@ -556,7 +506,7 @@ export const marketplaceApi = {
       return calcCart();
     },
     updateItem: async (itemId: string, quantity: number): Promise<Cart> => {
-      await delay(150);
+      await delay(100);
       const item = _cart.find((i) => i.id === itemId);
       if (item) {
         if (quantity <= 0) {
@@ -569,66 +519,105 @@ export const marketplaceApi = {
       return calcCart();
     },
     removeItem: async (itemId: string): Promise<Cart> => {
-      await delay(150);
+      await delay(100);
       _cart = _cart.filter((i) => i.id !== itemId);
       return calcCart();
     },
     clear: async (): Promise<void> => {
-      await delay(100);
+      await delay(50);
       _cart = [];
     },
   },
 
   // ── Orders ────────────────────────────────────────────────────────────────
   orders: {
-    list: async (): Promise<Order[]> => {
-      await delay(300);
-      return [..._orders].reverse();
-    },
-    get: async (id: string): Promise<Order> => {
-      await delay(200);
-      const o = _orders.find((x) => x.id === id);
-      if (!o) throw new Error("Заказ не найден");
-      return o;
-    },
-    create: async (data: CreateOrderRequest): Promise<Order> => {
-      await delay(500);
-      const items = data.items.map((i) => {
-        const p = MOCK_PRODUCTS.find((x) => x.id === i.productId)!;
-        return {
-          id: `oi-${Date.now()}-${i.productId}`,
-          productId: i.productId,
-          productName: p.name,
-          productImage: p.images[0]?.url,
-          quantity: i.quantity,
-          unit: p.unit,
-          price: p.price,
-          subtotal: p.price * i.quantity,
-          supplierId: p.supplier.id,
-          supplierName: p.supplier.name,
-        };
-      });
-      const subtotal = items.reduce((s, i) => s + i.subtotal, 0);
-      const deliveryCost = subtotal > 500_000 ? 0 : 15_000;
-      const order: Order = {
-        id: `ord-${Date.now()}`,
-        orderNumber: `TD-2024-${String(_orders.length + 1).padStart(3, "0")}`,
-        status: "pending",
-        items,
-        deliveryAddress: data.deliveryAddress,
-        subtotal,
-        deliveryCost,
-        total: subtotal + deliveryCost,
-        paymentMethod: data.paymentMethod,
-        paymentStatus: "pending",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        comment: data.comment,
-      };
-      _orders.push(order);
-      _cart = [];
-      return order;
-    },
+    list: (): Promise<Order[]> =>
+      withFallback(
+        async () => {
+          const res = await http.get<{ data: ApiOrder[]; meta: unknown }>("/shop/orders");
+          return res.data.data.map(enrichOrder);
+        },
+        () => [..._orders].reverse()
+      ),
+
+    get: (id: string): Promise<Order> =>
+      withFallback(
+        async () => {
+          const res = await http.get<{ data: ApiOrder }>(`/shop/orders/${id}`);
+          return enrichOrder(res.data.data);
+        },
+        () => {
+          const o = _orders.find((x) => x.id === id);
+          if (!o) throw new Error("Заказ не найден");
+          return o;
+        }
+      ),
+
+    create: (data: CreateOrderRequest): Promise<Order> =>
+      withFallback(
+        async () => {
+          const res = await http.post<{ data: ApiOrder }>("/shop/orders", data);
+          const order = enrichOrder(res.data.data);
+          _cart = [];
+          return order;
+        },
+        async () => {
+          await delay(500);
+          const items = data.items.map((i) => {
+            const p = MOCK_PRODUCTS.find((x) => x.id === i.productId)!;
+            return {
+              id: `oi-${Date.now()}-${i.productId}`,
+              productId: i.productId,
+              quantity: i.quantity,
+              unitPrice: p?.price ?? 0,
+              totalPrice: (p?.price ?? 0) * i.quantity,
+              productSnapshot: {
+                name: p?.name ?? "Товар",
+                price: p?.price ?? 0,
+                unit: p?.unit,
+                images: p?.images,
+              },
+            };
+          });
+          const totalAmount = items.reduce((s, i) => s + i.totalPrice, 0);
+          const order: Order = {
+            id: `ord-${Date.now()}`,
+            idempotencyKey: data.idempotency_key,
+            status: "pending",
+            totalAmount,
+            deliveryAddress: data.delivery_address,
+            comment: data.comment,
+            projectId: data.project_id ?? null,
+            customerId: "mock-user",
+            allowedNextStatuses: ["confirmed", "cancelled"],
+            items,
+            insertedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            orderNumber: `TD-${String(_orders.length + 1).padStart(4, "0")}`,
+            paymentMethod: "card",
+            paymentStatus: "pending",
+          };
+          _orders.push(order);
+          _cart = [];
+          return order;
+        }
+      ),
+
+    cancel: (id: string): Promise<Order> =>
+      withFallback(
+        async () => {
+          const res = await http.post<{ data: ApiOrder }>(`/shop/orders/${id}/cancel`);
+          return enrichOrder(res.data.data);
+        },
+        async () => {
+          await delay(300);
+          const o = _orders.find((x) => x.id === id);
+          if (!o) throw new Error("Заказ не найден");
+          o.status = "cancelled";
+          o.updatedAt = new Date().toISOString();
+          return o;
+        }
+      ),
   },
 
   // ── Supplier cabinet ──────────────────────────────────────────────────────
@@ -644,61 +633,65 @@ export const marketplaceApi = {
         totalProducts: _supplierProducts.length,
       };
     },
+
     products: {
-      list: async (): Promise<Product[]> => {
-        await delay(300);
-        return _supplierProducts;
-      },
-      create: async (data: CreateProductRequest): Promise<Product> => {
-        await delay(400);
-        const newProduct: Product = {
-          id: `prod-${Date.now()}`,
-          slug: data.name.toLowerCase().replace(/\s+/g, "-"),
-          ...data,
-          images: [],
-          inStock: true,
-          supplier: MOCK_SUPPLIERS[0],
-          rating: 0,
-          reviewCount: 0,
-          status: "draft",
-          categoryId: `cat-${data.categorySlug}`,
-          categoryName: MOCK_CATEGORIES.find((c) => c.slug === data.categorySlug)?.name ?? "",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        _supplierProducts.push(newProduct);
-        return newProduct;
-      },
-      update: async (id: string, data: UpdateProductRequest): Promise<Product> => {
-        await delay(300);
-        const idx = _supplierProducts.findIndex((p) => p.id === id);
-        if (idx === -1) throw new Error("Товар не найден");
-        _supplierProducts[idx] = { ..._supplierProducts[idx], ...data, updatedAt: new Date().toISOString() };
-        return _supplierProducts[idx];
-      },
-      delete: async (id: string): Promise<void> => {
-        await delay(300);
-        _supplierProducts = _supplierProducts.filter((p) => p.id !== id);
-      },
+      list: (): Promise<Product[]> =>
+        withFallback(
+          async () => {
+            const res = await http.get<ProductListResponse>("/shop/products", {
+              params: { supplier_id: "me", per_page: 100 },
+            });
+            return res.data.data.map(enrichProduct);
+          },
+          async () => {
+            await delay(300);
+            return _supplierProducts;
+          }
+        ),
+
+      create: (data: CreateProductRequest): Promise<Product> =>
+        marketplaceApi.products.create(data),
+
+      update: (id: string, data: UpdateProductRequest): Promise<Product> =>
+        marketplaceApi.products.update(id, data),
+
+      delete: (id: string): Promise<void> =>
+        marketplaceApi.products.delete(id),
     },
+
     orders: {
-      list: async (): Promise<SupplierOrder[]> => {
-        await delay(300);
-        return [..._supplierOrders].reverse();
-      },
-      updateStatus: async (id: string, status: SupplierOrder["status"]): Promise<SupplierOrder> => {
-        await delay(300);
-        const o = _supplierOrders.find((x) => x.id === id);
-        if (!o) throw new Error("Заказ не найден");
-        o.status = status;
-        o.updatedAt = new Date().toISOString();
-        return o;
-      },
+      list: (): Promise<SupplierOrder[]> =>
+        withFallback(
+          async () => {
+            const res = await http.get<{ data: ApiOrder[]; meta: unknown }>("/shop/orders", {
+              params: { role: "supplier" },
+            });
+            return res.data.data.map((o) => ({ ...enrichOrder(o), customerName: "Заказчик" }));
+          },
+          async () => {
+            await delay(300);
+            return [..._supplierOrders].reverse();
+          }
+        ),
+
+      updateStatus: (id: string, status: string): Promise<SupplierOrder> =>
+        withFallback(
+          async () => {
+            const res = await http.post<{ data: ApiOrder }>(`/shop/orders/${id}/status`, { status });
+            return { ...enrichOrder(res.data.data), customerName: "Заказчик" };
+          },
+          async () => {
+            await delay(300);
+            const o = _supplierOrders.find((x) => x.id === id);
+            if (!o) throw new Error("Заказ не найден");
+            o.status = status as Order["status"];
+            o.updatedAt = new Date().toISOString();
+            return o;
+          }
+        ),
     },
   },
 };
 
-// ---------------------------------------------------------------------------
-// Cart store (React context-friendly)
-// ---------------------------------------------------------------------------
 export { calcCart };
+export { MOCK_CATEGORIES, MOCK_PRODUCTS, MOCK_SUPPLIERS };

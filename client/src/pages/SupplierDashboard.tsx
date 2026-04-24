@@ -54,14 +54,14 @@ function ProductRow({
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
 }) {
-  const primaryImage = product.images.find((i) => i.isPrimary) ?? product.images[0];
+  const primaryImage = product.images.find((i) => i) ?? product.images[0];
   return (
     <tr className="border-b hover:bg-gray-50 transition-colors" style={{ borderColor: "#F3F4F6" }}>
       <td className="py-3 px-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
             {primaryImage ? (
-              <img src={primaryImage.url} alt={primaryImage.alt} className="w-full h-full object-cover" />
+              <img src={primaryImage} alt={"image"} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <Package size={16} className="text-gray-300" />
@@ -79,18 +79,18 @@ function ProductRow({
         <span
           className="text-xs font-medium px-2 py-1 rounded-full"
           style={
-            product.inStock
+            product.stockAvailable > 0
               ? { background: "#D1FAE5", color: "#059669" }
               : { background: "#FEE2E2", color: "#DC2626" }
           }
         >
-          {product.inStock ? `В наличии${product.stockQty ? ` (${product.stockQty})` : ""}` : "Нет"}
+          {product.stockAvailable > 0 ? `В наличии${product.stockAvailable ? ` (${product.stockAvailable})` : ""}` : "Нет"}
         </span>
       </td>
       <td className="py-3 px-4">
         <div className="flex items-center gap-1">
           <Star size={12} className="fill-amber-400 text-amber-400" />
-          <span className="text-sm text-gray-700">{product.rating.toFixed(1)}</span>
+          <span className="text-sm text-gray-700">{(product.rating ?? 0).toFixed(1)}</span>
           <span className="text-xs text-gray-400">({product.reviewCount})</span>
         </div>
       </td>
@@ -99,9 +99,9 @@ function ProductRow({
           <button
             onClick={() => onToggle(product.id)}
             className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
-            title={product.inStock ? "Снять с продажи" : "Выставить в продажу"}
+            title={product.stockAvailable > 0 ? "Снять с продажи" : "Выставить в продажу"}
           >
-            {product.inStock ? <Eye size={15} className="text-blue-600" /> : <EyeOff size={15} className="text-gray-400" />}
+            {product.stockAvailable > 0 ? <Eye size={15} className="text-blue-600" /> : <EyeOff size={15} className="text-gray-400" />}
           </button>
           <Link href={`/supplier/products/${product.id}/edit`}>
             <button className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
@@ -125,7 +125,7 @@ function OrderRow({ order, onUpdateStatus }: { order: SupplierOrder; onUpdateSta
   const [showActions, setShowActions] = useState(false);
   const NEXT_STATUS: Record<string, string> = {
     pending: "confirmed",
-    confirmed: "processing",
+    confirmed: "confirmed",
     processing: "shipped",
     shipped: "delivered",
   };
@@ -134,8 +134,8 @@ function OrderRow({ order, onUpdateStatus }: { order: SupplierOrder; onUpdateSta
   return (
     <tr className="border-b hover:bg-gray-50 transition-colors" style={{ borderColor: "#F3F4F6" }}>
       <td className="py-3 px-4">
-        <span className="font-mono text-sm font-bold text-gray-900">{order.orderNumber}</span>
-        <div className="text-xs text-gray-400">{formatDate(order.createdAt)}</div>
+        <span className="font-mono text-sm font-bold text-gray-900">{(order as any).orderNumber ?? `TD-${order.id.slice(0,6).toUpperCase()}`}</span>
+        <div className="text-xs text-gray-400">{formatDate(order.insertedAt)}</div>
       </td>
       <td className="py-3 px-4">
         <div className="text-sm text-gray-700">{order.deliveryAddress.city}</div>
@@ -143,9 +143,9 @@ function OrderRow({ order, onUpdateStatus }: { order: SupplierOrder; onUpdateSta
       </td>
       <td className="py-3 px-4">
         <div className="text-sm text-gray-700">{order.items.length} поз.</div>
-        <div className="text-xs text-gray-400">{order.items.map((i) => i.productName).join(", ").slice(0, 40)}...</div>
+        <div className="text-xs text-gray-400">{order.items.map((i) => i.productSnapshot?.name ?? "Товар").join(", ").slice(0, 40)}...</div>
       </td>
-      <td className="py-3 px-4 font-semibold text-sm text-gray-900">{formatPrice(order.total)}</td>
+      <td className="py-3 px-4 font-semibold text-sm text-gray-900">{formatPrice(order.totalAmount)}</td>
       <td className="py-3 px-4"><StatusBadge status={order.status} /></td>
       <td className="py-3 px-4">
         {next && (
@@ -154,7 +154,7 @@ function OrderRow({ order, onUpdateStatus }: { order: SupplierOrder; onUpdateSta
             className="px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
             style={{ background: "#EFF6FF", color: "#2563EB" }}
           >
-            → {next === "confirmed" ? "Подтвердить" : next === "processing" ? "В обработку" : next === "shipped" ? "Отправить" : "Доставлен"}
+            → {next === "confirmed" ? "Подтвердить" : next === "confirmed" ? "В обработку" : next === "shipped" ? "Отправить" : "Доставлен"}
           </button>
         )}
       </td>
@@ -188,7 +188,7 @@ export default function SupplierDashboard() {
 
   const handleToggleProduct = (id: string) => {
     setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, inStock: !p.inStock } : p))
+      prev.map((p) => (p.id === id ? { ...p, isActive: !p.isActive, stockAvailable: p.isActive ? 0 : p.stockTotal } : p))
     );
     toast.success("Статус товара обновлён");
   };
@@ -210,7 +210,7 @@ export default function SupplierDashboard() {
   );
 
   const pendingOrders = orders.filter((o) => (["pending", "confirmed"] as SupplierOrder["status"][]).includes(o.status));
-  const activeOrders = orders.filter((o) => (["processing", "shipped"] as SupplierOrder["status"][]).includes(o.status));
+  const activeOrders = orders.filter((o) => (["confirmed", "shipped"] as SupplierOrder["status"][]).includes(o.status));
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode; badge?: number }[] = [
     { id: "overview", label: "Обзор", icon: <BarChart3 size={16} /> },
@@ -282,7 +282,7 @@ export default function SupplierDashboard() {
               },
               {
                 label: "Активных товаров",
-                value: products.filter((p) => p.inStock).length,
+                value: products.filter((p) => p.stockAvailable > 0).length,
                 icon: <Package size={22} className="text-purple-600" />,
                 bg: "#F5F3FF",
               },
@@ -346,11 +346,11 @@ export default function SupplierDashboard() {
             {orders.slice(0, 4).map((order) => (
               <div key={order.id} className="flex items-center justify-between py-3 border-b last:border-0" style={{ borderColor: "#F3F4F6" }}>
                 <div>
-                  <span className="font-mono text-sm font-bold text-gray-900">{order.orderNumber}</span>
-                  <span className="text-xs text-gray-400 ml-2">{formatDate(order.createdAt)}</span>
+                  <span className="font-mono text-sm font-bold text-gray-900">{(order as any).orderNumber ?? `TD-${order.id.slice(0,6).toUpperCase()}`}</span>
+                  <span className="text-xs text-gray-400 ml-2">{formatDate(order.insertedAt)}</span>
                 </div>
                 <StatusBadge status={order.status} />
-                <span className="font-semibold text-sm text-gray-900">{formatPrice(order.total)}</span>
+                <span className="font-semibold text-sm text-gray-900">{formatPrice(order.totalAmount)}</span>
               </div>
             ))}
           </LightCard>

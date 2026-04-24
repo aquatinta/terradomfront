@@ -48,7 +48,7 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
 // ---------------------------------------------------------------------------
 function ProductCard({ product, view = "grid" }: { product: Product; view?: "grid" | "list" }) {
   const { addItem, loading } = useCart();
-  const primaryImage = product.images.find((i) => i.isPrimary) ?? product.images[0];
+  const primaryImage = product.images.find((i) => i) ?? product.images[0];
 
   if (view === "list") {
     return (
@@ -57,7 +57,7 @@ function ProductCard({ product, view = "grid" }: { product: Product; view?: "gri
           <Link href={`/marketplace/${product.id}`} className="flex-shrink-0">
             <div className="w-32 h-24 rounded-xl overflow-hidden bg-gray-100">
               {primaryImage ? (
-                <img src={primaryImage.url} alt={primaryImage.alt} className="w-full h-full object-cover" />
+                <img src={primaryImage} alt={"image"} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <Package size={32} className="text-gray-300" />
@@ -86,10 +86,10 @@ function ProductCard({ product, view = "grid" }: { product: Product; view?: "gri
             </div>
             <div className="flex items-center justify-between mt-3">
               <div className="flex items-center gap-3">
-                <StarRating rating={product.rating} count={product.reviewCount} />
+                <StarRating rating={product.rating ?? 0} count={product.reviewCount ?? 0} />
                 <span className="text-xs text-gray-400">•</span>
-                <span className="text-xs text-gray-500">{product.supplier.name}</span>
-                {product.inStock ? (
+                <span className="text-xs text-gray-500">{product.supplier?.name ?? ""}</span>
+                {product.stockAvailable > 0 ? (
                   <span className="text-xs text-green-600 font-medium flex items-center gap-1">
                     <CheckCircle2 size={10} /> В наличии
                   </span>
@@ -98,8 +98,8 @@ function ProductCard({ product, view = "grid" }: { product: Product; view?: "gri
                 )}
               </div>
               <button
-                onClick={() => addItem(product.id, product.minOrder, product.name)}
-                disabled={loading || !product.inStock}
+                onClick={() => addItem(product.id, product.minOrder ?? 1, product.name)}
+                disabled={loading || !(product.stockAvailable > 0)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all disabled:opacity-50"
                 style={{ background: "#2563EB", color: "#fff" }}
               >
@@ -120,8 +120,8 @@ function ProductCard({ product, view = "grid" }: { product: Product; view?: "gri
         <div className="aspect-[4/3] overflow-hidden bg-gray-100">
           {primaryImage ? (
             <img
-              src={primaryImage.url}
-              alt={primaryImage.alt}
+              src={primaryImage}
+              alt={"image"}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
@@ -137,13 +137,13 @@ function ProductCard({ product, view = "grid" }: { product: Product; view?: "gri
               -{Math.round((1 - product.price / product.priceOld) * 100)}%
             </span>
           )}
-          {product.tags.slice(0, 1).map((tag) => (
+          {(product.tags ?? []).slice(0, 1).map((tag) => (
             <span key={tag} className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "rgba(255,255,255,0.9)", color: "#374151" }}>
               {tag}
             </span>
           ))}
         </div>
-        {!product.inStock && (
+        {!(product.stockAvailable > 0) && (
           <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
             <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-800 text-white">Нет в наличии</span>
           </div>
@@ -160,8 +160,8 @@ function ProductCard({ product, view = "grid" }: { product: Product; view?: "gri
         </Link>
 
         <div className="flex items-center gap-2 mb-3">
-          <StarRating rating={product.rating} count={product.reviewCount} />
-          {product.supplier.verified && (
+          <StarRating rating={product.rating ?? 0} count={product.reviewCount ?? 0} />
+          {product.supplier?.verified && (
             <span className="text-[10px] text-green-600 font-medium flex items-center gap-0.5">
               <Shield size={9} /> Верифицирован
             </span>
@@ -177,8 +177,8 @@ function ProductCard({ product, view = "grid" }: { product: Product; view?: "gri
             )}
           </div>
           <button
-            onClick={() => addItem(product.id, product.minOrder, product.name)}
-            disabled={loading || !product.inStock}
+            onClick={() => addItem(product.id, product.minOrder ?? 1, product.name)}
+            disabled={loading || !(product.stockAvailable > 0)}
             className="p-2 rounded-xl transition-all disabled:opacity-50 hover:scale-105"
             style={{ background: "#2563EB", color: "#fff" }}
             title="Добавить в корзину"
@@ -189,10 +189,10 @@ function ProductCard({ product, view = "grid" }: { product: Product; view?: "gri
 
         {/* Supplier + delivery */}
         <div className="mt-3 pt-3 border-t flex items-center justify-between" style={{ borderColor: "#F3F4F6" }}>
-          <span className="text-xs text-gray-500 truncate">{product.supplier.name}</span>
+          <span className="text-xs text-gray-500 truncate">{product.supplier?.name ?? ""}</span>
           <span className="text-xs text-gray-400 flex items-center gap-1 flex-shrink-0">
             <Truck size={10} />
-            {product.supplier.deliveryDays} дн.
+            {product.supplier?.deliveryDays ?? 5} дн.
           </span>
         </div>
       </div>
@@ -255,8 +255,8 @@ function FilterPanel({
               className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-colors flex items-center justify-between ${filters.categorySlug === cat.slug ? "font-semibold" : "text-gray-600 hover:bg-gray-50"}`}
               style={filters.categorySlug === cat.slug ? { background: "#EFF6FF", color: "#2563EB" } : {}}
             >
-              <span>{cat.icon} {cat.name}</span>
-              <span className="text-xs text-gray-400">{cat.productCount}</span>
+              <span>{"🏗️"} {cat.name}</span>
+              <span className="text-xs text-gray-400">{0}</span>
             </button>
           ))}
         </div>
@@ -269,16 +269,16 @@ function FilterPanel({
           <input
             type="number"
             placeholder="От"
-            value={filters.minPrice ?? ""}
-            onChange={(e) => onChange({ minPrice: e.target.value ? Number(e.target.value) : undefined })}
+            value={filters.min_price ?? ""}
+            onChange={(e) => onChange({ min_price: e.target.value ? Number(e.target.value) : undefined })}
             className="w-full px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             style={{ borderColor: "#E5E7EB" }}
           />
           <input
             type="number"
             placeholder="До"
-            value={filters.maxPrice ?? ""}
-            onChange={(e) => onChange({ maxPrice: e.target.value ? Number(e.target.value) : undefined })}
+            value={filters.max_price ?? ""}
+            onChange={(e) => onChange({ max_price: e.target.value ? Number(e.target.value) : undefined })}
             className="w-full px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             style={{ borderColor: "#E5E7EB" }}
           />
@@ -289,8 +289,8 @@ function FilterPanel({
       <div>
         <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Регион поставки</h4>
         <select
-          value={filters.region ?? ""}
-          onChange={(e) => onChange({ region: e.target.value || undefined })}
+          value={filters.region_code ?? ""}
+          onChange={(e) => onChange({ region_code: e.target.value || undefined })}
           className="w-full px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
           style={{ borderColor: "#E5E7EB" }}
         >
@@ -306,10 +306,10 @@ function FilterPanel({
           {TECHNOLOGIES.map((t) => (
             <button
               key={t}
-              onClick={() => onChange({ technology: filters.technology === t ? undefined : t })}
+              onClick={() => onChange({ ...(filters as unknown as Record<string,unknown>), technology: (filters as any).technology === t ? undefined : t } as any)}
               className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors"
               style={
-                filters.technology === t
+                (filters as any).technology === t
                   ? { background: "#2563EB", color: "#fff", borderColor: "#2563EB" }
                   : { borderColor: "#E5E7EB", color: "#6B7280" }
               }
@@ -324,12 +324,12 @@ function FilterPanel({
       <div>
         <label className="flex items-center gap-3 cursor-pointer">
           <div
-            onClick={() => onChange({ inStock: !filters.inStock })}
-            className={`w-10 h-5 rounded-full transition-colors relative ${filters.inStock ? "" : "bg-gray-200"}`}
-            style={filters.inStock ? { background: "#2563EB" } : {}}
+            onClick={() => onChange({ in_stock: !filters.in_stock })}
+            className={`w-10 h-5 rounded-full transition-colors relative ${filters.in_stock ? "" : "bg-gray-200"}`}
+            style={filters.in_stock ? { background: "#2563EB" } : {}}
           >
             <div
-              className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${filters.inStock ? "translate-x-5" : "translate-x-0.5"}`}
+              className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${filters.in_stock ? "translate-x-5" : "translate-x-0.5"}`}
             />
           </div>
           <span className="text-sm text-gray-700">Только в наличии</span>
@@ -338,7 +338,7 @@ function FilterPanel({
 
       {/* Reset */}
       <button
-        onClick={() => onChange({ categorySlug: "", region: undefined, technology: undefined, minPrice: undefined, maxPrice: undefined, inStock: undefined })}
+        onClick={() => onChange({ categorySlug: "", region_code: undefined, technology: undefined, min_price: undefined, max_price: undefined, in_stock: undefined })}
         className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
       >
         Сбросить фильтры
@@ -360,9 +360,9 @@ export default function MarketplacePage() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filters, setFilters] = useState<ProductFilters>({
-    sortBy: "newest",
+    sort: "newest",
     page: 1,
-    perPage: 12,
+    per_page: 12,
   });
 
   const heroUrl = "https://d2xsxph8kpxj0f.cloudfront.net/310519663083092813/A58kibhm9oWDaNRQR3mFUx/marketplace-hero-VomdefwVMbHvvkL6azvR5B.webp";
@@ -396,11 +396,11 @@ export default function MarketplacePage() {
   const activeFilterCount = useMemo(() => {
     let n = 0;
     if (filters.categorySlug) n++;
-    if (filters.region) n++;
-    if (filters.technology) n++;
-    if (filters.minPrice !== undefined) n++;
-    if (filters.maxPrice !== undefined) n++;
-    if (filters.inStock) n++;
+    if (filters.region_code) n++;
+    if ((filters as any).technology) n++;
+    if (filters.min_price !== undefined) n++;
+    if (filters.max_price !== undefined) n++;
+    if (filters.in_stock) n++;
     return n;
   }, [filters]);
 
@@ -470,7 +470,7 @@ export default function MarketplacePage() {
                 : { borderColor: "#E5E7EB", color: "#6B7280", background: "#fff" }
             }
           >
-            {cat.icon} {cat.name}
+            {"🏗️"} {cat.name}
           </button>
         ))}
       </div>
@@ -511,8 +511,8 @@ export default function MarketplacePage() {
               {/* Sort */}
               <div className="relative">
                 <select
-                  value={filters.sortBy ?? "newest"}
-                  onChange={(e) => updateFilters({ sortBy: e.target.value as ProductFilters["sortBy"] })}
+                  value={filters.sort ?? "newest"}
+                  onChange={(e) => updateFilters({ sort: e.target.value as ProductFilters["sort"] })}
                   className="appearance-none pl-3 pr-8 py-2 rounded-xl border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                   style={{ borderColor: "#E5E7EB", color: "#374151" }}
                 >
@@ -552,7 +552,7 @@ export default function MarketplacePage() {
               <Package size={48} className="text-gray-300 mx-auto mb-4" />
               <h3 className="font-bold text-gray-700 mb-2" style={{ fontFamily: "Montserrat, sans-serif" }}>Товары не найдены</h3>
               <p className="text-sm text-gray-500 mb-4">Попробуйте изменить фильтры или поисковый запрос</p>
-              <OutlineButton onClick={() => updateFilters({ categorySlug: "", search: "", region: undefined, technology: undefined })}>
+              <OutlineButton onClick={() => updateFilters({ categorySlug: "", search: "", region_code: undefined, technology: undefined })}>
                 Сбросить фильтры
               </OutlineButton>
             </LightCard>
