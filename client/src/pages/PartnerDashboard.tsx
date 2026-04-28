@@ -9,7 +9,8 @@
  *   2. Мои офферы — список поданных офферов и их статусы
  *   3. Сделки — активные сделки с управлением этапами работ
  */
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { useLocation } from "wouter";
 import {
   Search,
   MapPin,
@@ -736,9 +737,25 @@ function EmptyState({
 // ---------------------------------------------------------------------------
 type TabId = "tenders" | "offers" | "deals";
 
+function getInitialPartnerTab(path: string): TabId {
+  if (path.startsWith("/partner/offers")) return "offers";
+  if (path.startsWith("/partner/deals")) return "deals";
+  return "tenders";
+}
+
 export default function PartnerDashboard() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<TabId>("tenders");
+  const [location] = useLocation();
+  const [activeTab, setActiveTab] = useState<TabId>(() => getInitialPartnerTab(location));
+
+  // Sync tab with URL when navigating via sidebar
+  useEffect(() => {
+    const tab = getInitialPartnerTab(location);
+    if (tab !== activeTab) {
+      setActiveTab(tab);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [isOnline] = useState(() => navigator.onLine);

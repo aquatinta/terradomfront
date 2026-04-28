@@ -52,9 +52,9 @@ const CUSTOMER_NAV: NavItem[] = [
 
 const PARTNER_NAV: NavItem[] = [
   { label: "Обзор", href: "/partner", icon: <LayoutDashboard size={18} /> },
-  { label: "Тендеры", href: "/partner/tenders", icon: <Package size={18} />, comingSoon: true },
-  { label: "Мои предложения", href: "/partner/offers", icon: <FileText size={18} />, comingSoon: true },
-  { label: "Сделки", href: "/partner/deals", icon: <Handshake size={18} />, comingSoon: true },
+  { label: "Тендеры", href: "/partner/tenders", icon: <Package size={18} /> },
+  { label: "Мои предложения", href: "/partner/offers", icon: <FileText size={18} /> },
+  { label: "Сделки", href: "/partner/deals", icon: <Handshake size={18} /> },
   { label: "Маркетплейс", href: "/marketplace", icon: <Store size={18} /> },
   { label: "Кабинет поставщика", href: "/supplier", icon: <ShoppingBag size={18} /> },
   { label: "Настройки", href: "/partner/settings", icon: <Settings size={18} />, comingSoon: true },
