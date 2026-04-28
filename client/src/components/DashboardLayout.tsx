@@ -42,9 +42,9 @@ interface NavItem {
 
 const CUSTOMER_NAV: NavItem[] = [
   { label: "Обзор", href: "/dashboard", icon: <LayoutDashboard size={18} /> },
-  { label: "Мои проекты", href: "/dashboard/projects", icon: <FolderOpen size={18} />, comingSoon: true },
-  { label: "Предложения", href: "/dashboard/offers", icon: <FileText size={18} />, comingSoon: true },
-  { label: "Сделки", href: "/dashboard/deals", icon: <Handshake size={18} />, comingSoon: true },
+  { label: "Мои проекты", href: "/dashboard/projects", icon: <FolderOpen size={18} /> },
+  { label: "Предложения", href: "/dashboard/offers", icon: <FileText size={18} /> },
+  { label: "Сделки", href: "/dashboard/deals", icon: <Handshake size={18} /> },
   { label: "Маркетплейс", href: "/marketplace", icon: <Store size={18} /> },
   { label: "Мои заказы", href: "/orders", icon: <ShoppingBag size={18} /> },
   { label: "Настройки", href: "/dashboard/settings", icon: <Settings size={18} />, comingSoon: true },
@@ -160,7 +160,9 @@ function Sidebar({
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
         {navItems.map((item) => {
-          const isActive = location === item.href;
+          const isActive = item.href === "/dashboard"
+            ? location === "/dashboard"
+            : location.startsWith(item.href);
           return (
             <button
               key={item.href}

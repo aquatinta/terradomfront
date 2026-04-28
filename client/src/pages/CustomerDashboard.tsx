@@ -671,10 +671,25 @@ function OffersPanel({
 
 type Tab = "projects" | "project-detail" | "offers" | "deals";
 
+function getInitialTab(path: string): Tab {
+  if (path.startsWith("/dashboard/offers")) return "offers";
+  if (path.startsWith("/dashboard/deals")) return "deals";
+  return "projects";
+}
+
 export default function CustomerDashboard() {
   const { user } = useAuth();
-  const [, navigate] = useLocation();
-  const [activeTab, setActiveTab] = useState<Tab>("projects");
+  const [location, navigate] = useLocation();
+  const [activeTab, setActiveTab] = useState<Tab>(() => getInitialTab(location));
+
+  // Sync tab with URL when navigating via sidebar
+  useEffect(() => {
+    const tab = getInitialTab(location);
+    if (tab !== activeTab && activeTab !== "project-detail") {
+      setActiveTab(tab);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedProjectDetail, setSelectedProjectDetail] = useState<Project | null>(null);
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
