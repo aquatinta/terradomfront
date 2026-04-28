@@ -65,6 +65,7 @@ const MILESTONE_STATUS_LABELS: Record<string, string> = {
 import { api } from "@/lib/api";
 import type { Project, Offer, Deal } from "@/lib/api.types";
 import { toast } from "sonner";
+import ProjectDetailPanel from "@/components/ProjectDetailPanel";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -668,13 +669,14 @@ function OffersPanel({
 // Main dashboard
 // ---------------------------------------------------------------------------
 
-type Tab = "projects" | "offers" | "deals";
+type Tab = "projects" | "project-detail" | "offers" | "deals";
 
 export default function CustomerDashboard() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState<Tab>("projects");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedProjectDetail, setSelectedProjectDetail] = useState<Project | null>(null);
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
@@ -839,10 +841,11 @@ export default function CustomerDashboard() {
               onClick={() => {
                 setActiveTab(tab.id);
                 setSelectedProject(null);
+                setSelectedProjectDetail(null);
                 setSelectedDeal(null);
               }}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                activeTab === tab.id
+                (activeTab === tab.id || (tab.id === "projects" && activeTab === "project-detail"))
                   ? "bg-[oklch(0.769_0.188_70.08)] text-[oklch(0.1_0.01_70)]"
                   : "text-[oklch(0.55_0.012_240)] hover:text-white"
               }`}
@@ -923,14 +926,34 @@ export default function CustomerDashboard() {
                     key={project.id}
                     project={project}
                     onSelect={(p) => {
-                      setSelectedProject(p);
-                      setActiveTab("offers");
+                      setSelectedProjectDetail(p);
+                      setActiveTab("project-detail");
                     }}
                   />
                 ))}
               </div>
             )}
           </div>
+        )}
+
+        {/* Tab: Project Detail */}
+        {activeTab === "project-detail" && selectedProjectDetail && (
+          <ProjectDetailPanel
+            project={selectedProjectDetail}
+            onBack={() => {
+              setActiveTab("projects");
+              setSelectedProjectDetail(null);
+            }}
+            onGoToOffers={(p) => {
+              setSelectedProject(p);
+              setSelectedProjectDetail(null);
+              setActiveTab("offers");
+            }}
+            onProjectUpdated={(updated) => {
+              setSelectedProjectDetail(updated);
+              refetchProjects();
+            }}
+          />
         )}
 
         {/* Tab: Offers */}
